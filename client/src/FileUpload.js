@@ -23,8 +23,9 @@ function FileUpload()
                         e.preventDefault()
 
                         //Create a form data to actually take in the file
-                        const formData = new formData()
-                        formData.append("file") //This links to the backend server component of req.files.file!
+                        const formData = new FormData()
+                        formData.append("file", file) //This links to the backend server component of req.files.file!
+                        //console.log(formData)
 
                         //A try-catch in order to take in the file and place it in the right directory
                         try
@@ -41,6 +42,10 @@ function FileUpload()
                             if(err.response.status === 500)
                             {
                                 console.log("There was a problem with the server")
+                            }
+                            else if(err.response.status === 400)
+                            {
+                                console.log("The directory was not found")
                             }
                             else
                             {
