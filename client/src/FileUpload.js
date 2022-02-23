@@ -8,9 +8,9 @@ import axios from 'axios';
 function FileUpload()
 {
     //Set up a bunch of states for the file upload
-    const [file, setFile] = useState()                      //Change the value in order to immediately and cleanly set the file
-    const [fileName, setFileName] = useState()              //Using this as part of a hook to note the type of file, the file itself, and what to send to submission
-    const [uploadedFile, setUploadedFile] = useState({})    //Obtain the returned file object
+    const [file, setFile] = useState()                                      //Change the value in order to immediately and cleanly set the file
+    const [fileName, setFileName] = useState("Choose File")                 //Using this as part of a hook to note the type of file, the file itself, and what to send to submission
+    const [uploadedFile, setUploadedFile] = useState({})                    //Obtain the returned file object
 
     const onChange = function(e)
                     {
@@ -58,7 +58,7 @@ function FileUpload()
         <Fragment>
             <form onSubmit = {onSubmit}>
                 <div className = "input-group mb-3">
-                    <input type = "file" className = "form-control" id = "customFile" onChange = {onChange}></input>
+                    <input type = "file" className = "custome-file-input" id = "customFile" onChange = {onChange}></input>
                     <label className = "custom-file-label" htmlFor = "custom-file"></label>
                     <input type = "submit" value = "Upload" className = "btn btn-primary btn-block"></input> 
                 </div>
