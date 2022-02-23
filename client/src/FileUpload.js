@@ -37,7 +37,15 @@ function FileUpload()
                         }
                         catch(err)
                         {
-
+                            //We could get a 400 or a 500 status error depending on the error type specified in the server.js
+                            if(err.response.status === 500)
+                            {
+                                console.log("There was a problem with the server")
+                            }
+                            else
+                            {
+                                console.log(err.response.data.msg)
+                            }
                         }
                     }
 
