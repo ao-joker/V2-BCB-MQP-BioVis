@@ -25,7 +25,7 @@ function FileUpload()
                         //Create a form data to actually take in the file
                         const formData = new FormData()
                         formData.append("file", file) //This links to the backend server component of req.files.file!
-                        //console.log(formData)
+                        console.log(formData)
 
                         //A try-catch in order to take in the file and place it in the right directory
                         try
