@@ -9,6 +9,16 @@ const app = express()
 //Upload the file using the app
 app.use(fileUpload())
 
+
+/*app.get('/*', function(req, res) {
+    res.sendFile(path.join(__dirname, '/client/src/App'), function(err) {
+      if (err) {
+          console.log("OOPS")
+        res.status(500).send(err)
+      }
+    })
+  })*/
+
 //Upload Endpoint for where the file will end up
 app.post("/upload", function(req, res)
                     {
@@ -45,4 +55,4 @@ app.post("/upload", function(req, res)
                     })
 
 //Ensure the server is starting and functioning properly
-app.listen(5000, function(){console.log("Server started")})
+app.listen(3000, function(){console.log("Server started")})
