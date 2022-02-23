@@ -2,12 +2,13 @@
 //uploading the file
 const express = require("express")
 const fileUpload = require("express-fileupload")
+var cors = require('cors')
 
 //Have the app take in the file 
 const app = express()
 
 //Upload the file using the app
-app.use(fileUpload())
+app.use(fileUpload(), cors())
 
 
 /*app.get('/*', function(req, res) {
@@ -55,4 +56,4 @@ app.post("/upload", function(req, res)
                     })
 
 //Ensure the server is starting and functioning properly
-app.listen(3001, function(){console.log("Server started")})
+app.listen(3000, function(){console.log("Server started")})
