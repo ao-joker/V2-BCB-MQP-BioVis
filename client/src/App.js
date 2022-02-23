@@ -15,8 +15,6 @@ function App()
          <h3 className="text-center mt-4">An MQP completed by Adrian Orszulak</h3>
          <h4 className="text-center mt-2">{acknowledgements}</h4>
 
-      <Home></Home>
-
       <FileUpload></FileUpload>
     </div>
   );
