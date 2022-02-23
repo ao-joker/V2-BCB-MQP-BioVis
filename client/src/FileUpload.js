@@ -63,7 +63,7 @@ function FileUpload()
             <form onSubmit = {onSubmit}>
                 <div className = "input-group mb-3">
                     <input type = "file" className = "custome-file-input" id = "customFile" onChange = {onChange}></input>
-                    <label className = "custom-file-label" htmlFor = "custom-file"></label>
+                    <label className = "custom-file-label" htmlFor = "custom-file">{fileName}</label>
                     <input type = "submit" value = "Upload" className = "btn btn-primary btn-block"></input> 
                 </div>
             </form>
