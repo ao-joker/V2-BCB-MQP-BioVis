@@ -1,6 +1,6 @@
 import React from 'react';
 import FileUpload from './FileUpload';
-import Home from '/.Home';
+//import Home from './Home';
 
 function App() 
 {
@@ -15,7 +15,7 @@ function App()
          <h3 className="text-center mt-4">An MQP completed by Adrian Orszulak</h3>
          <h4 className="text-center mt-2">{acknowledgements}</h4>
 
-      <Home></Home>
+      
       <FileUpload></FileUpload>
     </div>
   );
