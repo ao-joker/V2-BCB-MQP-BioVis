@@ -5,7 +5,7 @@ import axios from 'axios';
     - Firstly, the basic set up for the choosing file and then upload file system is placed in using the Fragment
     - Secondly, properly take in the file, acknowlegde its existence, and know what to pass
 */
-function FileUpload()
+function FileUpload()  
 {
     //Set up a bunch of states for the file upload
     const [file, setFile] = useState()                                      //Change the value in order to immediately and cleanly set the file
@@ -18,7 +18,7 @@ function FileUpload()
                         setFileName(e.target.files[0].name)
                     }
 
-    const onSubmit = async function(e)
+    const onSubmit = async e =>
                     {
                         e.preventDefault()
 
@@ -30,7 +30,11 @@ function FileUpload()
                         //A try-catch in order to take in the file and place it in the right directory
                         try
                         {
-                            const res = await axios.post("/upload", formData, {headers: {"Content-Type": "multipart/form-data"}})
+                            const res = await axios.post("/upload", formData, {
+                                                                                headers: 
+                                                                                {
+                                                                                    "Content-Type": "multipart/form-data"
+                                                                                }})
 
                             //Now extract the fileName and path from the res
                             const {fileName, filePath} = res.data

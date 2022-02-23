@@ -24,7 +24,7 @@ app.post("/upload", function(req, res)
 
                         //Move the file to the upload folder in the directory
                         //Asses potential error if there is a problem with the upload process overall
-                        file.mv(`${__dirname}/client/public/upload/${file.name}`, err => 
+                        file.mv(`${__dirname}/client/public/uploads/${file.name}`, err => 
                                                                                  {
                                                                                     //Output what the error in particular is should there be any 
                                                                                     //Also return res.status of 500 which is a server error
@@ -38,7 +38,7 @@ app.post("/upload", function(req, res)
                                                                                     //Sends back a json object of the file with its name and the path in directory to which it belongs
                                                                                     res.json({
                                                                                                 filename: file.name,
-                                                                                                filePath: `/upload/${file.name}`
+                                                                                                filePath: `/uploads/${file.name}`
                                                                                              })
 
                                                                                  })
