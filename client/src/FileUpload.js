@@ -30,7 +30,7 @@ function FileUpload()
                         //A try-catch in order to take in the file and place it in the right directory
                         try
                         {
-                            const res = await axios.post("/upload", formData, {
+                            const res = await axios.post("http://localhost:3001/upload", formData, {
                                                                                 headers: 
                                                                                 {
                                                                                     "Content-Type": "multipart/form-data"
