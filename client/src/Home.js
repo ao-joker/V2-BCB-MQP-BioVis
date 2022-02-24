@@ -236,8 +236,8 @@ const Home = () =>
                              .attr("y", y0)
                              .attr("rx", 5) //Give nice rounded corners
                              .attr("ry", 5) //Give nice rounded corners
-                             .attr("stroke", function(d){if(pathwayType == this.id){return "white"}else{return "black"}})
-                             .attr("fill", function(d){if(pathwayType == this.id){return "blue"}else{return "red"}})
+                             .attr("stroke", function(d){if(pathwayType === this.id){return "white"}else{return "black"}})
+                             .attr("fill", function(d){if(pathwayType === this.id){return "blue"}else{return "red"}})
 
             //adding text to each button group, centered within the button rect
             radioButtonGroups.append("text")
@@ -308,8 +308,8 @@ const Home = () =>
                                .attr("y", y0TF)
                                .attr("rx", 5) //Give nice rounded corners
                                .attr("ry", 5) //Give nice rounded corners
-                               .attr("stroke", function(d){if(TFPresent == true){return "white"}else{return "black"}})
-                               .attr("fill", function(d){if(TFPresent == true){return "blue"}else{return "red"}})
+                               .attr("stroke", function(d){if(TFPresent === true){return "white"}else{return "black"}})
+                               .attr("fill", function(d){if(TFPresent === true){return "blue"}else{return "red"}})
 
             //adding text to each button group, centered within the button rect
             radioButtonTFGroups.append("text")
@@ -401,7 +401,7 @@ const Home = () =>
         //the links and nodes attributes specific to this svg)
         const simulation = d3.forceSimulation(nodes)
               .force("link", d3.forceLink(links).id(function(d){return d.index}).distance(70))
-              .force("charge", d3.forceManyBody().strength(function(d){if(pathwayType == "Protein-Protein"){return -1600}else{return -1300}}))
+              .force("charge", d3.forceManyBody().strength(function(d){if(pathwayType === "Protein-Protein"){return -1600}else{return -1300}}))
               .force("center", d3.forceCenter(width / 2, (height / 2) + 100))
               .force("x", d3.forceX())
               .force("y", d3.forceY())
@@ -624,7 +624,7 @@ const Home = () =>
                 }
 
                 //Now add the TF if present
-                if((TFPresent == true))
+                if((TFPresent === true))
                 {
                     //Temp array to hold what TF have been added
                     var addedTF = []
@@ -813,12 +813,12 @@ const Home = () =>
                 }
 
                 //Now add the TF links if present
-                if((TFPresent == true))
+                if((TFPresent === true))
                 {
                     //Go through all the proteins and molecules
                     for(var i = 0; i < masterArray.length; i++)
                     {                            
-                        if(masterArray[i]["pathway"].includes(selectedPathway) && !(masterArray[i]["TF"] == ""))
+                        if(masterArray[i]["pathway"].includes(selectedPathway) && !(masterArray[i]["TF"] === ""))
                         {
                             //Need to link together the molecules to their respective proteins in this case
                             masterArray[i]["TF"].forEach(function(TF)
