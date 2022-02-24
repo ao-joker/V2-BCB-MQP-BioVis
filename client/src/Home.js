@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import * as d3 from "d3";
+import * as d3 from "d3";   //npm install d3 --save!!
 import data from "./FINAL-SET.csv";
 
 const Home = () => 
@@ -1289,10 +1289,10 @@ const Home = () =>
 
     return(
         <div className="home">
-            <h2>The Pathway Itself!</h2>
-            <select id="selectButton"></select>
-            <svg id="Pathway" width="1900" height="1800"></svg>
-            <svg id="Regulation" width="700" height="1000"></svg>
+            <h2 className="text-center">The Pathway Itself!</h2>
+            <select id="selectButton" position="absolute"></select>
+            <svg id="Pathway" width="2000" height="1800"></svg>
+            <svg id="Regulation" width="900" height="1000"></svg>
             <svg id="PPI" width="1100" height="1000"></svg>
             
         </div>

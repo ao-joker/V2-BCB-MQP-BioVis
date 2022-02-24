@@ -1,8 +1,8 @@
 //Take the express package and right in the constants that will contain and function to the process of
 //uploading the file
-const express = require("express")
-const fileUpload = require("express-fileupload")
-var cors = require('cors')
+const express = require("express") //npm install express
+const fileUpload = require("express-fileupload")  
+var cors = require('cors')  //npm install cors --save backend only
 
 //Have the app take in the file 
 const app = express()
