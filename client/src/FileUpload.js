@@ -8,14 +8,14 @@ import axios from 'axios';
 function FileUpload()  
 {
     //Set up a bunch of states for the file upload
-    const [file, setFile] = useState("")                                      //Change the value in order to immediately and cleanly set the file
-    const [fileName, setFileName] = useState("Choose file")                 //Using this as part of a hook to note the type of file, the file itself, and what to send to submission
+    const [file, setFile] = useState('')                                      //Change the value in order to immediately and cleanly set the file
+    const [fileName, setFilename] = useState('Choose File');                 //Using this as part of a hook to note the type of file, the file itself, and what to send to submission
     const [uploadedFile, setUploadedFile] = useState({})                    //Obtain the returned file object
 
     const onChange = e =>
                     {
                         setFile(e.target.files[0])        
-                        setFileName(e.target.files[0].name)
+                        setFilename(e.target.files[0].name)
                     }
 
     const onSubmit = async e =>
@@ -37,10 +37,9 @@ function FileUpload()
                                                                                 }})
 
                             //Now extract the fileName and path from the res
-                            const {fileName, filePath} = res.data
-
-                            console.log({fileName, filePath})
-                            setUploadedFile({fileName, filePath})
+                            const {filename, filePath} = res.data
+                            console.log(res.data)
+                            setUploadedFile({filename, filePath})
                         }
                         catch(err)
                         {
@@ -65,7 +64,7 @@ function FileUpload()
             <form onSubmit = {onSubmit}>
                 <div className = "input-group mb-3">
                     <input type = "file" className = "custome-file-input" id = "customFile" onChange = {onChange}></input>
-                    <label className = "custom-file-label" htmlFor = "custom-file"></label>
+                    <label className = "custom-file-label" htmlFor = "customFile"></label>
                     <input type = "submit" value = "Upload" className = "btn btn-primary btn-block"></input> 
                 </div>
             </form>
@@ -73,7 +72,7 @@ function FileUpload()
             {uploadedFile ? 
                 <div className = "row mt-4">
                     <div className = "col-md-5 m-auto">
-                        <h3 className = "text-center">{console.log(uploadedFile.fileName)}</h3>
+                        <h3 className = "text-center">{console.log(uploadedFile)}</h3>
                     </div>
                 </div> : null}
         </Fragment>
