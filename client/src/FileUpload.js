@@ -8,11 +8,11 @@ import axios from 'axios';
 function FileUpload()  
 {
     //Set up a bunch of states for the file upload
-    const [file, setFile] = useState()                                      //Change the value in order to immediately and cleanly set the file
-    const [fileName, setFileName] = useState("Choose File")                 //Using this as part of a hook to note the type of file, the file itself, and what to send to submission
+    const [file, setFile] = useState("")                                      //Change the value in order to immediately and cleanly set the file
+    const [fileName, setFileName] = useState("Choose file")                 //Using this as part of a hook to note the type of file, the file itself, and what to send to submission
     const [uploadedFile, setUploadedFile] = useState({})                    //Obtain the returned file object
 
-    const onChange = function(e)
+    const onChange = e =>
                     {
                         setFile(e.target.files[0])        
                         setFileName(e.target.files[0].name)
@@ -38,6 +38,8 @@ function FileUpload()
 
                             //Now extract the fileName and path from the res
                             const {fileName, filePath} = res.data
+
+                            console.log({fileName, filePath})
                             setUploadedFile({fileName, filePath})
                         }
                         catch(err)
@@ -67,6 +69,13 @@ function FileUpload()
                     <input type = "submit" value = "Upload" className = "btn btn-primary btn-block"></input> 
                 </div>
             </form>
+
+            {uploadedFile ? 
+                <div className = "row mt-4">
+                    <div className = "col-md-5 m-auto">
+                        <h3 className = "text-center">{console.log(uploadedFile.fileName)}</h3>
+                    </div>
+                </div> : null}
         </Fragment>
     )
 }

@@ -641,7 +641,7 @@ const Home = () =>
                                                                     
                                                                     if(!(addedTF.includes(element)) && (element !== ""))
                                                                     {
-                                                                        //console.log(element)
+                                                                        console.log(element)
                                                                         var moleculeObject = 
                                                                         {
                                                                             name: element,
@@ -818,9 +818,11 @@ const Home = () =>
                     //Go through all the proteins and molecules
                     for(var i = 0; i < masterArray.length; i++)
                     {                            
-                        if(masterArray[i]["pathway"].includes(selectedPathway) && !(masterArray[i]["TF"] === ""))
+                        if(masterArray[i]["pathway"].includes(selectedPathway) && !(masterArray[i]["TF"][0] === ""))
                         {
                             //Need to link together the molecules to their respective proteins in this case
+                            //console.log(masterArray[i]["TF"])
+                            //console.log(masterArray[i]["TF"].length)
                             masterArray[i]["TF"].forEach(function(TF)
                                                                 {
                                                                     var pathwayObject = 
