@@ -14,6 +14,15 @@ const BlueSquareTester = () =>
         .attr("height", 2000)
         .attr("stroke", "black")
         .attr("fill", "blue")
+
+        d3.select("#Regulation")
+        .append("rect")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("width", 100)
+        .attr("height", 100)
+        .attr("stroke", "black")
+        .attr("fill", "green")
     })
 
     return (

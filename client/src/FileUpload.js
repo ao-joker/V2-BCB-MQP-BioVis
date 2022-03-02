@@ -1,5 +1,6 @@
 import React, {Fragment, useState} from 'react';
 import axios from 'axios';
+import BlueSquareTester from "./BlueSquareTester"
 
 /*Here is the basis for the file upload mechanism
     - Firstly, the basic set up for the choosing file and then upload file system is placed in using the Fragment
