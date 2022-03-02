@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, {useEffect} from "react";
 import * as d3 from "d3";   //npm install d3 --save!!
 import data from "./FINAL-SET.csv";
 
@@ -19,7 +19,7 @@ const Home = () =>
                 console.log(masterArray)
         
                 makePathway(masterArray)
-                makeRegulationList(masterArray)
+                makeRegulationList(masterArray)//, file.filename, file.filepath)
                 makePPIBase(masterArray)
             })
 
