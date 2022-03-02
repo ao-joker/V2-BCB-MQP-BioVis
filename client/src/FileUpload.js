@@ -73,7 +73,7 @@ function FileUpload()
                 <div className = "row mt-4">
                     <div className = "col-md-5 m-auto">
                         <h3 className = "text-center">{console.log(uploadedFile)}</h3>
-                        
+                        <BlueSquareTester></BlueSquareTester>
                     </div>
                 </div> : null}
         </Fragment>
