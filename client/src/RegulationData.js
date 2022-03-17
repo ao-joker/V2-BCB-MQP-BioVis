@@ -2,7 +2,7 @@ import React, {useEffect} from "react"
 import * as d3 from "d3";
 import {workingFile} from "./FileUpload"
 
-const BlueSquareTester = () =>
+const RegulationData = () =>
 {
 
     useEffect(() => 
@@ -34,10 +34,9 @@ const BlueSquareTester = () =>
 
     return (
         <div className = "test">
-            <svg id="TESTING" width="900" height="1000"></svg>
         </div>
     )
 }
 
 
-export default BlueSquareTester;
+export default RegulationData;

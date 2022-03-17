@@ -1,11 +1,18 @@
 import React, {Fragment, useState} from 'react';
 import axios from 'axios';
-import BlueSquareTester from "./BlueSquareTester"
+import RegulationData from "./RegulationData"
 
 /*Here is the basis for the file upload mechanism
     - Firstly, the basic set up for the choosing file and then upload file system is placed in using the Fragment
     - Secondly, properly take in the file, acknowlegde its existence, and know what to pass
 */
+var workingFile;
+
+function setWorkingFile(theFile)
+{
+    return theFile
+}
+
 function FileUpload()  
 {
     //Set up a bunch of states for the file upload
@@ -60,6 +67,19 @@ function FileUpload()
                         }
                     }
 
+    workingFile = setWorkingFile(uploadedFile)
+    /*const uploaded = () =>
+    {
+        d3.select("#Regulation")
+          .append("rect")
+          .attr("x", 0)
+          .attr("y", 0)
+          .attr("width", 100)
+          .attr("height", 100)
+          .attr("stroke", "black")
+          .attr("fill", "green")
+    }*/
+
     return(
         <Fragment>
             <form onSubmit = {onSubmit}>
@@ -72,11 +92,12 @@ function FileUpload()
 
             {uploadedFile ? (<div className = "row mt-4">
                     <div className = "col-md-5 m-auto">
-                        <h3 className = "text-center">{}</h3>
+                        <RegulationData></RegulationData>
                     </div>
                 </div>) : null}
         </Fragment>
     )
 }
 
+export {workingFile}; 
 export default FileUpload;
