@@ -70,11 +70,9 @@ function FileUpload()
                 </div>
             </form>
 
-            {uploadedFile ? 
-                (<div className = "row mt-4">
+            {uploadedFile ? (<div className = "row mt-4">
                     <div className = "col-md-5 m-auto">
-                        <h3 className = "text-center">{console.log(uploadedFile)}</h3>
-                            <BlueSquareTester></BlueSquareTester>
+                        <h3 className = "text-center">{}</h3>
                     </div>
                 </div>) : null}
         </Fragment>
