@@ -16,12 +16,22 @@ const RegulationData = () =>
             //Draw a new background and the tables of the information from that file
             makeRegulationListBackground()
 
-            d3.csv().then(function(data)
+            //console.log(workingFile.filePath)
+            d3.csv(workingFile.filePath).then(function(data)
                         {
+                            //console.log(masterData)
                             //Variable that defines the columns of the csv, that being simply the protein name ("Rv####") and fold change
                             //Then, other details will be pulled from the existing masterArray dataset
                             var columns = ["Trasncription Factor/Protein Name", "Pathway", "Regulation Type", "Fold Change"]
-                            drawTables(data, columns)
+
+                            //Organize the data to match the columns
+                            var organizedData = organizeDataForRegList(data, columns)
+
+                            //Draw the tables
+                            drawTables(organizedData, columns)
+
+                            //Make adjustments to the pathway in panel A
+                            showRegulationChangesInPathway()
                         })
         }
 
@@ -38,7 +48,20 @@ const RegulationData = () =>
       
         }
 
-        function drawTables(data, columns)
+        //Make an array of objects consisting of the column types hardcoded
+        function organizeDataForRegList(data, columns)
+        {
+            //Here is the array that will store all the objects
+            let arr = []
+
+            //Loop through the whole of the data until all of it has been parsed
+            for(var j = 0; j < data.length; j++)
+            {
+                listObject = 
+            }
+        }
+
+        function drawTables(organizedData, columns)
         {
             d3.select("#Regulation")
                 .append("text")
@@ -48,6 +71,33 @@ const RegulationData = () =>
                 .attr("fill", "green")
                 .attr("font-size", 50)
                 .text(`${workingFile.filename}`)
+
+            //Define the table, and append a header row and the rest of the body
+            var table = d3.select("#Regulation")
+                          .append('table')
+
+            var tableHeader = table.append('thead')
+            var tableBody = table.append('tbody')
+            
+            //Specifically to the table head, add the columns list that was passed to it
+            //Then add the columns as text
+            //console.log(data)
+            tableHeader.append('tr')
+                       .selectAll('th')
+                       .data(columns)
+                       .enter()
+                        .append('th')
+                        .text(function(d) {return d;})
+            
+            tableBody.selectAll("tr")
+                     .data(organizedData)
+                     .join("tr")
+                     .selectAll("td")
+                     .data(function(row){return d3.entries(row)})
+                        .join("td")
+                        .text(function(d){return d.value});
+            
+            return table;
         }
 
         function showRegulationChangesInPathway()
