@@ -15,6 +15,7 @@ const RegulationData = () =>
 
         d3.csv().then(function(data)
                     {
+                        //Variable that defines the columns of the csv, that being simply the protein name ("Rv####") and
                         drawTables(data)
                     })
 
@@ -30,29 +31,21 @@ const RegulationData = () =>
               .attr("fill", "blue")
       
         }
-        function drawTables()
+
+        function drawTables(cleanedData)
         {
             if(workingFile.filename !== undefined)
             {
-                d3.select("#Regulation")
-                .append("rect")
-                .attr("x", 0)
-                .attr("y", 0)
-                .attr("width", 100)
-                .attr("height", 100)
-                .attr("stroke", "black")
-                .attr("fill", "green")
-
-                d3.select("#Regulation")
+                /*d3.select("#Regulation")
                 .append("text")
                 .attr("x", 200)
                 .attr("y", 200)
                 .attr("stroke", "black")
                 .attr("fill", "green")
                 .attr("font-size", 50)
-                .text(`${workingFile.filename}`) 
-                
-                d3.csv()
+                .text(`${workingFile.filename}`)*/
+
+
             }
         }
 
@@ -65,8 +58,7 @@ const RegulationData = () =>
     })
 
     return (
-        <div className = "test">
-        </div>
+        <div className = "test"></div>
     )
 }
 

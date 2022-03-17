@@ -10,7 +10,7 @@ var workingFile;
 
 function setWorkingFile(theFile)
 {
-    return theFile
+    return theFile;
 }
 
 function FileUpload()  

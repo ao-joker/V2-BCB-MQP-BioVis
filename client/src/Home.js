@@ -2,6 +2,13 @@ import React, {useEffect} from "react";
 import * as d3 from "d3";   //npm install d3 --save!!
 import data from "./FINAL-SET.csv";
 
+var cleanedAndOrganizedData;
+
+function setCleanedAndOrganizedData(array)
+{
+    return array;
+}
+
 const Home = () => 
 {
     //YOU BEST FIX THOSE SVGs! THE SIZES AND LOCATION NEED DRASTIC ADJUSTING
@@ -17,9 +24,10 @@ const Home = () =>
                 //console.log(data)
                 var masterArray = organizeData(data)
                 console.log(masterArray)
+                cleanedAndOrganizedData = setCleanedAndOrganizedData(masterArray)
         
                 makePathway(masterArray)
-                makeRegulationList(masterArray)//, file.filename, file.filepath)
+                makeRegulationList(masterArray)
                 makePPIBase(masterArray)
             })
 
@@ -42,6 +50,7 @@ const Home = () =>
           var proteinObject = 
           {
               name: data[i]["Protein Name"],
+              actualName: getRealName(data[i]["Protein Name"]),
               id: data[i]["Protein ID"],
               pathway: commaSeparatedStringToList(data[i]["Pathway"]),
               connections: commaSeparatedStringToList(data[i]["List of Proteins Connected To"]),
@@ -59,7 +68,32 @@ const Home = () =>
 
         return arr;
 
+        //Removes any dashes in protein names used by the program to denote node differences but not researchers
+        function getRealName(string)
+        {                
+            let temp = ""   //This is a temporary string needed to add characters for the real name
+            var count = 0   //Counter variable
+
+            if(string.includes("-"))
+            {
+                while(string[count + 1] !== "-")
+                {
+                    temp = temp + string[count]
+                    count++;
+                }
+                
+                return temp;
+            }
+            else
+            {
+                return string;
+            }
+
+        }
+        
         //Makes a list of all pathways a protein is a part of
+
+        //Converts to comma separated sting to a list
         function commaSeparatedStringToList(longString)
         {
             //A temporary array that will hold the pathways to convert into a string
@@ -538,6 +572,7 @@ const Home = () =>
                             var pathwayObject = 
                             {
                                 name: masterArray[i]["name"],
+                                actualName: masterArray[i]["actualName"],
                                 label: "#Pr" + masterArray[i]["name"],
                                 radius: 20,
                                 color: "white"
@@ -592,6 +627,7 @@ const Home = () =>
                             var pathwayObject = 
                             {
                                 name: masterArray[i]["name"],
+                                actualName: masterArray[i]["actualName"],
                                 label: "#Pr" + masterArray[i]["name"],
                                 radius: 20,
                                 color: "white"
@@ -1300,5 +1336,6 @@ const Home = () =>
         </div>
     );
 }
- 
+
+export {cleanedAndOrganizedData};
 export default Home;
