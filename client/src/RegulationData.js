@@ -22,13 +22,14 @@ const RegulationData = () =>
                             //console.log(masterData)
                             //Variable that defines the columns of the csv, that being simply the protein name ("Rv####") and fold change
                             //Then, other details will be pulled from the existing masterArray dataset
-                            var columns = ["Trasncription Factor/Protein Name", "Pathway", "Regulation Type", "Fold Change"]
+                            var columnsProtein = ["Protein Name", "Pathway", "Regulation Type", "Fold Change"]
+                            var columnsTF = ["Transcription Factor", "Pathway", "Regulation Type", "Fold Change"]
 
                             //Organize the data to match the columns
-                            var organizedData = organizeDataForRegList(data, columns)
+                            var organizedData = organizeDataForRegList(data)
 
                             //Draw the tables
-                            drawTables(organizedData, columns)
+                            drawTables(organizedData, columnsProtein, columnsTF)
 
                             //Make adjustments to the pathway in panel A
                             showRegulationChangesInPathway()
@@ -49,15 +50,26 @@ const RegulationData = () =>
         }
 
         //Make an array of objects consisting of the column types hardcoded
-        function organizeDataForRegList(data, columns)
+        function organizeDataForRegList(data)
         {
-            //Here is the array that will store all the objects
-            let arr = []
+            //Here is the arrays that will store all the objects as either proteins or trasncription factors
+            let arrProtein = []
+            let arrTF = []
 
             //Loop through the whole of the data until all of it has been parsed
             for(var j = 0; j < data.length; j++)
             {
+                if(masterData.)
+                //If the data calls for a protein, add it as a protein list 
                 listObject = 
+                {
+                    Protein: data[j]["Protein"],
+                    Pathway:,
+                    RegulationType:,
+                    FoldChange:
+                }
+
+                //If the data calls for a transcription factor, add it as a TF list
             }
         }
 
@@ -72,6 +84,7 @@ const RegulationData = () =>
                 .attr("font-size", 50)
                 .text(`${workingFile.filename}`)
 
+            //Making the Protein table first
             //Define the table, and append a header row and the rest of the body
             var table = d3.select("#Regulation")
                           .append('table')
@@ -98,6 +111,8 @@ const RegulationData = () =>
                         .text(function(d){return d.value});
             
             return table;
+
+            //Making the TF table second
         }
 
         function showRegulationChangesInPathway()
