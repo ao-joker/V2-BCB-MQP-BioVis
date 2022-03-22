@@ -2,7 +2,6 @@ import React, {useEffect} from "react"
 import * as d3 from "d3";
 import {workingFile} from "./FileUpload"
 import {cleanedAndOrganizedData as masterData} from "./Home"
-import { formatSpecifier } from "d3";
 
 const RegulationData = () =>
 {
@@ -16,8 +15,11 @@ const RegulationData = () =>
 
             //Draw a new background and the tables of the information from that file
             makeRegulationListBackground()
-            var proteinList = generateProteinsInMasterData()
-            var TFList = generateTFInMasterData()
+            var proteinList = generateProteinsInMasterData(masterData)
+            var TFList = generateTFInMasterData(masterData)
+
+            console.log(proteinList)
+            console.log(TFList)
 
             //console.log(workingFile.filePath)
             d3.csv(workingFile.filePath).then(function(data)
@@ -25,11 +27,11 @@ const RegulationData = () =>
                             //console.log(masterData)
                             //Variable that defines the columns of the csv, that being simply the protein name ("Rv####") and fold change
                             //Then, other details will be pulled from the existing masterArray dataset
-                            var columnsProtein = ["Protein Name", "Pathway", "Regulation Type", "Fold Change"]
-                            var columnsTF = ["Transcription Factor", "Pathway", "Regulation Type", "Fold Change"]
+                            var columnsProtein = ["Protein", "Pathway", "Regulation Type", "Fold Change"]
+                            var columnsTF = ["Transcription_Factor", "Pathway", "Regulation Type", "Fold Change"]
 
                             //Organize the data to match the columns
-                            var organizedData = organizeDataForRegList(data, proteinList, TFList)
+                            var organizedData = organizeDataForRegList(data, masterData, proteinList, TFList)
                             console.log(organizedData)
 
                             //Draw the tables
@@ -56,11 +58,30 @@ const RegulationData = () =>
         //Generate the list of the proteins in the masterData
         function generateProteinsInMasterData(data)
         {
+            //Temp array
             let arr = []
+
+            //Also, temp holding name variable
+            let protein 
 
             for(var i = 0; i < data.length; i++)
             {
-                arr.push(data[i]["name"])
+                
+                //Check if it has a dash to denote multiple proteins
+                //Get rid of it or keep the same depending if it has one
+                if(data[i]["name"].includes("-"))
+                {
+                    protein = data[i]["name"].substring(0, (data[i]["name"].indexOf("-") - 1))
+                }
+                else
+                {
+                    protein = data[i]["name"]
+                }
+
+                if(!(arr.includes(data[i]["name"])))
+                {
+                    arr.push(protein)
+                }
             }
 
             return arr;
@@ -73,9 +94,16 @@ const RegulationData = () =>
 
             for(var i = 0; i < data.length; i++)
             {
-                if(data[i]["TF"] !== '')
+                if(data[i]["TF"][0] !== "")
                 {
-                    arr.push(data[i]["TF"])
+                    data[i]["TF"].forEach(function(element)
+                                          {
+                                             if(!(arr.includes(element)))
+                                             {
+                                                arr.push(element)
+                                             }
+                                          })
+                                            
                 }
             }
 
@@ -83,7 +111,7 @@ const RegulationData = () =>
         }
 
         //Make an array of objects consisting of the column types hardcoded
-        function organizeDataForRegList(data, proteinList, TFList)
+        function organizeDataForRegList(data, masterData, proteinList, TFList)
         {
             //Here is the arrays that will store all the objects as either proteins or trasncription factors
             let arrProtein = []
@@ -92,20 +120,40 @@ const RegulationData = () =>
             //Loop through the whole of the data until all of it has been parsed
             for(var j = 0; j < data.length; j++)
             {   
-                let indexNumber = proteinList.indexOf(data[j]["Protein"])
+                //Check if it is a protein
+                let indexNumber1 = proteinList.indexOf(data[j]["Name"])
 
-                if(indexNumber !== -1)
+                if(indexNumber1 !== -1)
                 {
+                    console.log(masterData[indexNumber1]["pathway"])
+                    console.log(masterData[indexNumber1])
                     //If the data calls for a protein, add it as a protein list 
                     var listObject = 
                     {
-                        Protein: data[j]["Protein"],
-                        Pathway: masterData[indexNumber]["Pathway"],
+                        Protein: data[j]["Name"],
+                        Pathway: masterData[indexNumber1]["pathway"],
                         RegulationType: getRegulationType(data[j]["Fold Change"]),
                         FoldChange: data[j]["Fold Change"]
                     }
 
                     arrProtein.push(listObject)
+                }
+
+                //Check if it is a transcription factor
+                let indexNumber2 = TFList.indexOf(data[j]["Name"])
+                
+                if(indexNumber2 !== -1)
+                {
+                    //If the data calls for a protein, add it as a protein list 
+                    var listObject = 
+                    {
+                        Transcription_Factor: data[j]["Name"],
+                        Pathway: "N/A",
+                        RegulationType: getRegulationType(data[j]["Fold Change"]),
+                        FoldChange: data[j]["Fold Change"]
+                    }
+
+                    arrTF.push(listObject)
                 }
 
                 //If the data calls for a transcription factor, add it as a TF list
@@ -129,7 +177,7 @@ const RegulationData = () =>
             }
         }
 
-        function drawTables(organizedData, columns)
+        function drawTables(organizedData, columnsProtein, columnsTF)
         {
             d3.select("#Regulation")
                 .append("text")
@@ -151,14 +199,14 @@ const RegulationData = () =>
             //Specifically to the table head, add the columns list that was passed to it
             //Then add the columns as text
             //console.log(data)
-            tableHeader.append('tr')
+            /*tableHeader.append('tr')
                        .selectAll('th')
                        .data(columns)
                        .enter()
                         .append('th')
                         .text(function(d) {return d;})
             
-            /*tableBody.selectAll("tr")
+            tableBody.selectAll("tr")
                      .data(organizedData)
                      .join("tr")
                      .selectAll("td")
