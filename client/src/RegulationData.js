@@ -2,6 +2,7 @@ import React, {useEffect} from "react"
 import * as d3 from "d3";
 import {workingFile} from "./FileUpload"
 import {cleanedAndOrganizedData as masterData} from "./Home"
+import { formatSpecifier } from "d3";
 
 const RegulationData = () =>
 {
@@ -15,6 +16,8 @@ const RegulationData = () =>
 
             //Draw a new background and the tables of the information from that file
             makeRegulationListBackground()
+            var proteinList = generateProteinsInMasterData()
+            var TFList = generateTFInMasterData()
 
             //console.log(workingFile.filePath)
             d3.csv(workingFile.filePath).then(function(data)
@@ -26,7 +29,8 @@ const RegulationData = () =>
                             var columnsTF = ["Transcription Factor", "Pathway", "Regulation Type", "Fold Change"]
 
                             //Organize the data to match the columns
-                            var organizedData = organizeDataForRegList(data)
+                            var organizedData = organizeDataForRegList(data, proteinList, TFList)
+                            console.log(organizedData)
 
                             //Draw the tables
                             drawTables(organizedData, columnsProtein, columnsTF)
@@ -49,8 +53,37 @@ const RegulationData = () =>
       
         }
 
+        //Generate the list of the proteins in the masterData
+        function generateProteinsInMasterData(data)
+        {
+            let arr = []
+
+            for(var i = 0; i < data.length; i++)
+            {
+                arr.push(data[i]["name"])
+            }
+
+            return arr;
+        }
+
+        //Generate the list of the TF in the masterData
+        function generateTFInMasterData(data)
+        {
+            let arr = []
+
+            for(var i = 0; i < data.length; i++)
+            {
+                if(data[i]["TF"] !== '')
+                {
+                    arr.push(data[i]["TF"])
+                }
+            }
+
+            return arr;
+        }
+
         //Make an array of objects consisting of the column types hardcoded
-        function organizeDataForRegList(data)
+        function organizeDataForRegList(data, proteinList, TFList)
         {
             //Here is the arrays that will store all the objects as either proteins or trasncription factors
             let arrProtein = []
@@ -58,18 +91,41 @@ const RegulationData = () =>
 
             //Loop through the whole of the data until all of it has been parsed
             for(var j = 0; j < data.length; j++)
-            {
-                if(masterData.)
-                //If the data calls for a protein, add it as a protein list 
-                listObject = 
+            {   
+                let indexNumber = proteinList.indexOf(data[j]["Protein"])
+
+                if(indexNumber !== -1)
                 {
-                    Protein: data[j]["Protein"],
-                    Pathway:,
-                    RegulationType:,
-                    FoldChange:
+                    //If the data calls for a protein, add it as a protein list 
+                    var listObject = 
+                    {
+                        Protein: data[j]["Protein"],
+                        Pathway: masterData[indexNumber]["Pathway"],
+                        RegulationType: getRegulationType(data[j]["Fold Change"]),
+                        FoldChange: data[j]["Fold Change"]
+                    }
+
+                    arrProtein.push(listObject)
                 }
 
                 //If the data calls for a transcription factor, add it as a TF list
+            }
+            console.log(arrProtein)
+            console.log(arrTF)
+
+            return [arrProtein, arrTF]
+        }
+
+        //Determines wether the resulting change is an up or down regulation
+        function getRegulationType(foldChange)
+        {
+            if(foldChange > 0)
+            {
+                return "Upregulation"
+            }
+            else
+            {
+                return "Downregulation"
             }
         }
 
@@ -102,13 +158,13 @@ const RegulationData = () =>
                         .append('th')
                         .text(function(d) {return d;})
             
-            tableBody.selectAll("tr")
+            /*tableBody.selectAll("tr")
                      .data(organizedData)
                      .join("tr")
                      .selectAll("td")
                      .data(function(row){return d3.entries(row)})
                         .join("td")
-                        .text(function(d){return d.value});
+                        .text(function(d){return d.value});*/
             
             return table;
 
