@@ -221,6 +221,7 @@ const Home = () =>
                 .attr("width", 4000)
                 .attr("height", 2000)
                 .attr("stroke", "black")
+                .attr("stroke-width", 2)
                 .attr("fill", "black")
 
             //Radio buttons
