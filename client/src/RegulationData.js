@@ -2,7 +2,7 @@ import React, {useEffect} from "react"
 import * as d3 from "d3";
 import {workingFile} from "./FileUpload"
 import {cleanedAndOrganizedData as masterData} from "./Home"
-import {nodes as node} from "./Home"
+import {allNodes as node} from "./Home"
 
 const RegulationData = () =>
 {
@@ -28,8 +28,8 @@ const RegulationData = () =>
                             //console.log(masterData)
                             //Variable that defines the columns of the csv, that being simply the protein name ("Rv####") and fold change
                             //Then, other details will be pulled from the existing masterArray dataset
-                            var columnsProtein = ["Protein", "Pathway", "Branch_Point", "Regulation Type", "Fold Change"]
-                            var columnsTF = ["Transcription_Factor", "Pathway", "Branch_Point", "Regulation Type", "Fold Change"]
+                            var columnsProtein = ["Protein", "Pathway", "Branch_Point", "Regulation_Type", "Fold_Change"]
+                            var columnsTF = ["Transcription_Factor", "Pathway", "Branch_Point", "Regulation_Type", "Fold_Change"]
 
                             //Organize the data to match the columns
                             var organizedData = organizeDataForRegList(data, masterData, proteinList, TFList)
@@ -53,9 +53,6 @@ const RegulationData = () =>
               .attr("height", 1000)
               .attr("stroke", "blue")
               .attr("fill", "blue")
-
-            node.attr("fill", "white")
-      
         }
 
         //Generate the list of the proteins in the masterData
@@ -136,8 +133,8 @@ const RegulationData = () =>
                         Protein: data[j]["Name"],
                         Pathway: masterData[indexNumber1]["pathway"],
                         Branch_Point: masterData[indexNumber1]["branch"],
-                        RegulationType: getRegulationType(data[j]["Fold Change"]),
-                        FoldChange: data[j]["Fold Change"]
+                        Regulation_Type: getRegulationType(data[j]["Fold Change"]),
+                        Fold_Change: data[j]["Fold Change"]
                     }
 
                     arrProtein.push(listObject)
@@ -154,8 +151,8 @@ const RegulationData = () =>
                         Transcription_Factor: data[j]["Name"],
                         Pathway: "N/A",
                         Branch_Point: "N/A",
-                        RegulationType: getRegulationType(data[j]["Fold Change"]),
-                        FoldChange: data[j]["Fold Change"]
+                        Regulation_Type: getRegulationType(data[j]["Fold Change"]),
+                        Fold_Change: data[j]["Fold Change"]
                     }
 
                     arrTF.push(listObject)
@@ -184,21 +181,50 @@ const RegulationData = () =>
 
         function drawTables(organizedData, columnsProtein, columnsTF)
         {
-            d3.select("#Regulation")
+            /*d3.select("#Regulation")
                 .append("text")
                 .attr("x", 200)
                 .attr("y", 200)
                 .attr("stroke", "black")
                 .attr("fill", "green")
                 .attr("font-size", 50)
-                .text(`${workingFile.filename}`)
+                .text(`${workingFile.filename}`)*/
 
             //Making the Protein table first
             //Define the table, and append a header row and the rest of the body
-            const table = d3.select("#Regulation")
-                            .create("table")
+            var table = d3.select("#Regulation")
+                            .append("foreignObject")
+                            .attr("x", 50)
+                            .attr("y", 100)
+                            .attr("width", 900)
+                            .attr("height", 650)
+                            .append("xhtml:table")
+
+            var thead = table.append("thead")
+            var tbody = table.append("tbody")
+
+            //Create the table header
+            thead.append("tr")
+                 .selectAll("th")
+                 .data(columnsProtein)
+                 .enter()
+                 .append("th")
+                 .text(function(d,i){console.log(d); return d;})
+
+            //Create the table body
+            var rows = tbody.selectAll("tr")
+                            .data(organizedData[0])
+                            .enter()
+                            .append("tr")
+
+            var cells = rows.selectAll("td")
+                            .data(function(row){return columnsProtein.map(function(column){return {column: column, value: row[column]}})})
+                            .enter()
+                            .append("td")
+                            .text(function(d, i){return d.value})
+
             
-            table.append("thead")
+            /*table.append("thead")
                  .join("tr")
                  .selectAll("th")
                  .data(columnsProtein)
@@ -215,7 +241,7 @@ const RegulationData = () =>
                  .selectAll("td")
                  .data(row => row.entries())
                  .join("td")
-                 .text(d => d.value);
+                 .text(d => d.value);*/
             
             //Specifically to the table head, add the columns list that was passed to it
             //Then add the columns as text

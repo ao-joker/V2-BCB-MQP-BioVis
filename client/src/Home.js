@@ -3,7 +3,7 @@ import * as d3 from "d3";   //npm install d3 --save!!
 import data from "./FINAL-SET.csv";
 
 var cleanedAndOrganizedData;
-var nodes;
+var allNodes;
 
 function setCleanedAndOrganizedData(array)
 {
@@ -464,7 +464,7 @@ const Home = () =>
 
         //Updated and specify the various attributes associated with each node that is a subset of the whole nodes class
         //Here I am just defining the basic attibutes for the nodes similarly to how it was done in the links above 
-        const node = svg.append("g")
+        var node = svg.append("g")
                         .attr("fill", "white") //Append to the avg as basic background white color
                         .attr("stroke-linecap", "round")
                         .attr("stroke-linejoin", "round") //Some cool styles that denote how the links and nodes should be joined together!
@@ -488,7 +488,9 @@ const Home = () =>
                         .attr('fill', function(d){return d.color})
                         .attr("id", function(d){return d.name})//function(d){if(d.name === proteinInterest){return "green"}else{return "black"}}) //Now specifying the different attribtues that are important for each node to be a circle visible on the svg!
                   
-       
+        //Set global variable to send around 
+        allNodes = setNodes(node)
+        
         //A little sneaky tooltip for ya!
                     node.append("rect")
                         .attr("id", "tooltip")
@@ -552,9 +554,8 @@ const Home = () =>
                               .style("visibility", "hidden")
                         })
 
-                    //Set global variable of nodes to send to reguation data
-                    nodes = setNodes(node)
-                    
+
+
         //Now, to keep the network well updated and better looking than ever before by adding a call to linkArc (which makes the lines straigther n the viewbox) and
         //a call to a transfrom attribute of the nodes that will properly display the text alongside and with the circle nodes as it moves
         simulation.on("tick", function(d)
@@ -1348,5 +1349,5 @@ const Home = () =>
 }
 
 export {cleanedAndOrganizedData};
-export {nodes};
+export {allNodes};
 export default Home;
