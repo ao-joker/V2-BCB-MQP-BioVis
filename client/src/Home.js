@@ -3,10 +3,16 @@ import * as d3 from "d3";   //npm install d3 --save!!
 import data from "./FINAL-SET.csv";
 
 var cleanedAndOrganizedData;
+var nodes;
 
 function setCleanedAndOrganizedData(array)
 {
     return array;
+}
+
+function setNodes(node)
+{
+    return node;
 }
 
 const Home = () => 
@@ -546,6 +552,9 @@ const Home = () =>
                               .style("visibility", "hidden")
                         })
 
+                    //Set global variable of nodes to send to reguation data
+                    nodes = setNodes(node)
+                    
         //Now, to keep the network well updated and better looking than ever before by adding a call to linkArc (which makes the lines straigther n the viewbox) and
         //a call to a transfrom attribute of the nodes that will properly display the text alongside and with the circle nodes as it moves
         simulation.on("tick", function(d)
@@ -1339,4 +1348,5 @@ const Home = () =>
 }
 
 export {cleanedAndOrganizedData};
+export {nodes};
 export default Home;

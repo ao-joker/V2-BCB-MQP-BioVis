@@ -2,6 +2,7 @@ import React, {useEffect} from "react"
 import * as d3 from "d3";
 import {workingFile} from "./FileUpload"
 import {cleanedAndOrganizedData as masterData} from "./Home"
+import {nodes as node} from "./Home"
 
 const RegulationData = () =>
 {
@@ -27,8 +28,8 @@ const RegulationData = () =>
                             //console.log(masterData)
                             //Variable that defines the columns of the csv, that being simply the protein name ("Rv####") and fold change
                             //Then, other details will be pulled from the existing masterArray dataset
-                            var columnsProtein = ["Protein", "Pathway", "Regulation Type", "Fold Change"]
-                            var columnsTF = ["Transcription_Factor", "Pathway", "Regulation Type", "Fold Change"]
+                            var columnsProtein = ["Protein", "Pathway", "Branch_Point", "Regulation Type", "Fold Change"]
+                            var columnsTF = ["Transcription_Factor", "Pathway", "Branch_Point", "Regulation Type", "Fold Change"]
 
                             //Organize the data to match the columns
                             var organizedData = organizeDataForRegList(data, masterData, proteinList, TFList)
@@ -45,13 +46,15 @@ const RegulationData = () =>
         function makeRegulationListBackground()
         {
             d3.select("#Regulation")
-            .append("rect")
+              .append("rect")
               .attr("x", 0)
               .attr("y", 0)
               .attr("width", 1400)
               .attr("height", 1000)
               .attr("stroke", "blue")
               .attr("fill", "blue")
+
+            node.attr("fill", "white")
       
         }
 
@@ -132,6 +135,7 @@ const RegulationData = () =>
                     {
                         Protein: data[j]["Name"],
                         Pathway: masterData[indexNumber1]["pathway"],
+                        Branch_Point: masterData[indexNumber1]["branch"],
                         RegulationType: getRegulationType(data[j]["Fold Change"]),
                         FoldChange: data[j]["Fold Change"]
                     }
@@ -149,6 +153,7 @@ const RegulationData = () =>
                     {
                         Transcription_Factor: data[j]["Name"],
                         Pathway: "N/A",
+                        Branch_Point: "N/A",
                         RegulationType: getRegulationType(data[j]["Fold Change"]),
                         FoldChange: data[j]["Fold Change"]
                     }
@@ -190,11 +195,27 @@ const RegulationData = () =>
 
             //Making the Protein table first
             //Define the table, and append a header row and the rest of the body
-            var table = d3.select("#Regulation")
-                          .append('table')
-
-            var tableHeader = table.append('thead')
-            var tableBody = table.append('tbody')
+            const table = d3.select("#Regulation")
+                            .create("table")
+            
+            table.append("thead")
+                 .join("tr")
+                 .selectAll("th")
+                 .data(columnsProtein)
+                 .join("th")
+                 .text(d => d)
+                 .style("background-color", "#aaa")
+                 .style("color", "#fff")
+            
+            
+            table.append("tbody")
+                 .selectAll("tr")
+                 .data(organizedData[0])
+                 .join("tr")
+                 .selectAll("td")
+                 .data(row => row.entries())
+                 .join("td")
+                 .text(d => d.value);
             
             //Specifically to the table head, add the columns list that was passed to it
             //Then add the columns as text
@@ -214,7 +235,7 @@ const RegulationData = () =>
                         .join("td")
                         .text(function(d){return d.value});*/
             
-            return table;
+            //return table;
 
             //Making the TF table second
         }
