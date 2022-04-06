@@ -2,7 +2,8 @@ import React, {useEffect} from "react"
 import * as d3 from "d3";
 import {workingFile} from "./FileUpload"
 import {cleanedAndOrganizedData as masterData} from "./Home"
-import {allNodes as node} from "./Home"
+import {allNodes as node} from "./Home";
+import "./tableStyle.css";
 
 const RegulationData = () =>
 {
@@ -194,8 +195,8 @@ const RegulationData = () =>
             //Define the table, and append a header row and the rest of the body
             var table = d3.select("#Regulation")
                             .append("foreignObject")
-                            .attr("x", 50)
-                            .attr("y", 100)
+                            .attr("x", 25)
+                            .attr("y", 50)
                             .attr("width", 900)
                             .attr("height", 650)
                             .append("xhtml:table")
@@ -218,7 +219,10 @@ const RegulationData = () =>
                             .append("tr")
 
             var cells = rows.selectAll("td")
-                            .data(function(row){return columnsProtein.map(function(column){return {column: column, value: row[column]}})})
+                            .data(function(row)
+                                  {
+                                      return columnsProtein.map(function(column){return {column: column, value: row[column]}})
+                                  })
                             .enter()
                             .append("td")
                             .text(function(d, i){return d.value})
