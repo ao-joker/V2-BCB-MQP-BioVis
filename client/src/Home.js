@@ -63,7 +63,7 @@ const Home = () =>
               molecules: commaSeparatedStringToList(data[i]["Molecules Connected To"]),
               pathwayConnection: data[i]["Other Pathways Connected To"],
               TF: commaSeparatedStringToList(data[i]["List of TF Reg"]),
-              regulation: data[i]["Corresponding reg"],
+              regulation: commaSeparatedStringToList(data[i]["Corresponding reg"]),
               branch: data[i]["Branch point"],              
               PPINetwork: commaSeparatedStringToList(data[i]["PPI network"]),
               PPIInteraction: commaSeparatedStringToList(data[i]["PPI network interaction type"])
@@ -442,7 +442,7 @@ const Home = () =>
         //the links and nodes attributes specific to this svg)
         const simulation = d3.forceSimulation(nodes)
               .force("link", d3.forceLink(links).id(function(d){return d.index}).distance(70))
-              .force("charge", d3.forceManyBody().strength(function(d){if(pathwayType === "Protein-Protein"){return -1600}else{return -1300}}))
+              .force("charge", d3.forceManyBody().strength(function(d){if(pathwayType === "Protein-Protein"){return -1700}else{return -1300}}))
               .force("center", d3.forceCenter(width / 2, (height / 2) + 100))
               .force("x", d3.forceX())
               .force("y", d3.forceY())
@@ -475,7 +475,7 @@ const Home = () =>
                     node.append("text")
                         .attr("x", 30)
                         .attr("y", "0.31em")
-                        .text(function(d){return d.name})
+                        .text(function(d){return d.actualName})
                         .clone(true).lower()
                         .attr("fill", "none")
                         .attr("stroke", "black")
@@ -492,21 +492,39 @@ const Home = () =>
         allNodes = setNodes(node)
         
         //A little sneaky tooltip for ya!
-                    node.append("rect")
-                        .attr("id", "tooltip")
-                        .attr("x", -5)
-                        .attr("y", -5)
-                        .attr("width", 1)
-                        .attr("height", 1)
-                        .attr("fill", "white")
-                        .style("position", "absolute") // the absolute position is necessary so that we can manually define its position later
-                        .style("visibility", "hidden") // hide it from default at the start so it only appears on hover
-                        .append("text")
-                        .attr("x", '5') 
-                        .attr("y", '55')
-                        .attr('fill', 'black')
-                        .attr('stroke', 'bold')
-                        .attr('font-size', 35)
+        node.append("rect")
+            .attr("id", "tooltip")
+            .attr("x", -5)
+            .attr("y", -5)
+            .attr("width", 1)
+            .attr("height", 1)
+            .attr("fill", "white")
+            .attr("stroke", "black")
+            .style("position", "absolute") // the absolute position is necessary so that we can manually define its position later
+            .style("visibility", "hidden") // hide it from default at the start so it only appears on hover    
+        
+        node.append("text")
+            .attr("id", "tooltipText1")
+            .attr("x", 5) 
+            .attr("y", 15)
+            .attr('fill', 'black')
+            .attr('stroke', 'bold')
+            .attr('font-size', 12.5)
+            .style("position", "absolute") // the absolute position is necessary so that we can manually define its position later
+            .style("visibility", "hidden") // hide it from default at the start so it only appears on hover   
+            .text(function(d){if(d.label.includes("#Pr")){return "Gene Name: " + d.actualName;}else if(d.label.includes("#Mo")){return "Molecule Name: " + d.actualName;}else{return "Transcription Factor: " + d.actualName;}})
+                    
+        node.append("text")
+            .attr("id", "tooltipText2")
+            .attr("x", 5) 
+            .attr("y", 30)
+            .attr('fill', 'black')
+            .attr('stroke', 'bold')
+            .attr('font-size', 12.5)
+            .style("position", "absolute") // the absolute position is necessary so that we can manually define its position later
+            .style("visibility", "hidden") // hide it from default at the start so it only appears on hover   
+            .text(function(d){if(d.label.includes("#Pr")){return "Protein Name: " + d.id;}else if(d.label.includes("#Mo")){return "";}else{return "Typical Regulation Impact: " + d.regulation;}})
+            
                     
                     //Draw PPI 
                     node.on("click", function(event, d)
@@ -518,7 +536,7 @@ const Home = () =>
                         //console.log(this.name)
                         if(d.label.includes("#Pr"))
                         {
-                            createPPI(d.name, masterArray)
+                            createPPI(d.actualName, d.name, masterArray)
                         }
                         else if(d.label.includes("#TF"))
                         {
@@ -535,22 +553,35 @@ const Home = () =>
                         {
                             d3.select(this)
                               .select("#tooltip")
-                              .attr("width", 100)
-                              .attr("height", 80)
+                              .attr("width", 400)
+                              .attr("height", 50)
                               .text("HI")
                               .style("visibility", "visible")
 
-                            //d3.select(this).select("circle").attr("r", 100)
-                            /*tooltip.attr("x", event.pageX)
-                                   .attr("y", event.pageY)
-                                   .style("visibility", "visible") // hide it from default at the start so it only appears on hover*/
-                        })//tooltip_in)
+                            //Make the text invisible
+                            d3.select(this)
+                              .select("#tooltipText1")
+                              .style("visibility", "visible")
+
+                            d3.select(this)
+                              .select("#tooltipText2")
+                              .style("visibility", "visible")
+                        })
                         .on("mouseout", function()
                         {
                             d3.select(this)
                               .select("#tooltip")
                               .attr("width", 1)
                               .attr("height", 1)
+                              .style("visibility", "hidden")
+
+                            //Make the text invisible
+                            d3.select(this)
+                              .select("#tooltipText1")
+                              .style("visibility", "hidden")
+
+                            d3.select(this)
+                              .select("#tooltipText2")
                               .style("visibility", "hidden")
                         })
 
@@ -583,6 +614,7 @@ const Home = () =>
                             {
                                 name: masterArray[i]["name"],
                                 actualName: masterArray[i]["actualName"],
+                                id: masterArray[i]["id"],
                                 label: "#Pr" + masterArray[i]["name"],
                                 radius: 20,
                                 color: "white"
@@ -638,6 +670,7 @@ const Home = () =>
                             {
                                 name: masterArray[i]["name"],
                                 actualName: masterArray[i]["actualName"],
+                                id: masterArray[i]["id"],
                                 label: "#Pr" + masterArray[i]["name"],
                                 radius: 20,
                                 color: "white"
@@ -693,6 +726,7 @@ const Home = () =>
                                                                         {
                                                                             name: element,
                                                                             actualName: element,
+                                                                            regulation: getRegulation(masterArray[i]["regulation"], masterArray[i]["TF"].indexOf(element)),
                                                                             label: "#TF" + element,
                                                                             radius: 15,
                                                                             color: "purple"
@@ -705,6 +739,21 @@ const Home = () =>
                                                                 })
                         }
                     } 
+                }
+
+                //get Regulation type (up or down from Systems Bio Mtb Databases)
+                function getRegulation(regulationElements, indexNumber)
+                {
+                    console.log(regulationElements[indexNumber])
+
+                    if(regulationElements[indexNumber] === "1")
+                    {
+                        return "Upregulates"
+                    }
+                    else
+                    {
+                        return "Downregulates"
+                    }
                 }
 
                 //console.log(addedMolecules)
@@ -904,7 +953,7 @@ const Home = () =>
           .attr("x", 0)
           .attr("y", 0)
           .attr("width", 1400)
-          .attr("height", 1000)
+          .attr("height", 1300)
           .attr("stroke", "blue")
           .attr("fill", "blue")
   
@@ -935,7 +984,7 @@ const Home = () =>
           .attr("x", 0)
           .attr("y", 0)
           .attr("width", 1600)
-          .attr("height", 1000)
+          .attr("height", 1300)
           .attr("stroke", "pink")
           .attr("fill", "pink")
 
@@ -953,7 +1002,7 @@ const Home = () =>
     }
 
     //Here, we will actually contrusct the PPI
-    function createPPI(proteinInterest, masterArray)
+    function createPPI(namingProtein, proteinInterest, masterArray)
     {
         //Remove any existing items and create a new base
         d3.select("#PPI").selectAll("svg > *").remove()
@@ -975,7 +1024,7 @@ const Home = () =>
           .attr("stroke", "bold")
           .attr("font-size", 30)
           //.attr("text-anchor", "middle")
-          .text(`Protein-Protein Interaction Network of ${proteinInterest}`)
+          .text(`Protein-Protein Interaction Network of ${namingProtein}`)
 
         //Add the legend and color coordination
         //First sort through every possible combination and add to a list besides the proteins with multiple 
@@ -989,6 +1038,21 @@ const Home = () =>
                                                         if(!(interactionTypes.includes(element)) && !(element.includes("and")) && (element !== ""))
                                                         {
                                                             interactionTypes.push(element)
+                                                        }
+                                                        else if(element.includes("and"))
+                                                        {
+                                                            //Now add any with and so each element is enumerated
+                                                            let tempArray = []
+                                                            tempArray = element.split(" and ")
+                                                            //console.log(tempArray)
+
+                                                            tempArray.forEach(function(element)
+                                                                              {
+                                                                                    if(!(interactionTypes.includes(element)) && (element !== ""))
+                                                                                    {
+                                                                                        interactionTypes.push(element)
+                                                                                    }                                                                                    
+                                                                              })
                                                         }
                                                     })
         }
@@ -1060,7 +1124,7 @@ const Home = () =>
                                                 })   
 
                     //Then, add the protein that we like to look at
-                    updatedNodes.push({name: protein["name"], radius: 20, interaction: "None on self", legendLabel: ""})
+                    updatedNodes.push({name: protein["actualName"], radius: 20, interaction: "None on self", legendLabel: ""})
                 }
 
                 function createUpdatedLinks(protein)
@@ -1095,9 +1159,9 @@ const Home = () =>
         //This is the simulation itself that is a force directed network (tick function called later after initializing all
         //the links and nodes attributes specific to this svg)
         const simulation = d3.forceSimulation(nodes)
-              .force("link", d3.forceLink(links).id(function(d){return d.index}).distance(300))
-              .force("charge", d3.forceManyBody().strength(-2000))
-              .force("center", d3.forceCenter((width / 2) - 50, (height / 2) + 100))
+              .force("link", d3.forceLink(links).id(function(d){return d.index}).distance(325))
+              .force("charge", d3.forceManyBody().strength(-2200))
+              .force("center", d3.forceCenter((width / 2) - 50, (height / 2) + 125))
               .force("x", d3.forceX())
               .force("y", d3.forceY())
               .force('collide', d3.forceCollide().radius(function(d){return d.radius}))
@@ -1130,7 +1194,7 @@ const Home = () =>
                         .attr("stroke", function(d){if(d.name === proteinInterest){return "white"}else{if(d.interaction === undefined || d.interaction.indexOf("and") !== -1){d.legendLabel = "Multiple (hover over proteins)"; return colorLegend(d.legendLabel)}else{return colorLegend(d.interaction)}}})
                         .attr("stroke-width", 1.5)
                         .attr("r", function(d){return d.radius})
-                        .attr('fill', function(d){if(d.name === proteinInterest){return "green"}else{return "black"}}) //Now specifying the different attribtues that are important for each node to be a circle visible on the svg!
+                        .attr('fill', function(d){if(d.name === namingProtein){return "green"}else{return "black"}}) //Now specifying the different attribtues that are important for each node to be a circle visible on the svg!
                   
                     node.append("text")
                         .attr("x", 30)
@@ -1173,15 +1237,28 @@ const Home = () =>
                         .attr('font-size', 12.5)
                         .style("position", "absolute") // the absolute position is necessary so that we can manually define its position later
                         .style("visibility", "hidden") // hide it from default at the start so it only appears on hover   
-                        .text(function(d){return "Interaction(s): " + d.interaction})
+                        .text(function(d)              // function that splits the array and adds each interaction individually
+                            {
+                                let tempArray = []
+                                let finalOutput = ""
+                                tempArray = d.interaction.split(" and ")
+
+                                tempArray.forEach(function(element)
+                                                  {
+                                                     finalOutput = finalOutput + "\n" + element   
+                                                  })
+
+                                console.log(finalOutput)
+                                return "Interaction(s):" + finalOutput;
+                            })   
         
                     node.on("mouseover", function()
                         {
                             //Make the square visible
                             d3.select(this)
                               .select("#tooltipSquare")
-                              .attr("width", 400)
-                              .attr("height", 40)
+                              .attr("width", 250)
+                              .attr("height", 80)
                               .style("visibility", "visible")
 
                             //Make the text visible
@@ -1342,8 +1419,8 @@ const Home = () =>
             <h2 className="text-center">The Pathway Itself!</h2>
             <select id="selectButton" position="absolute"></select>
             <svg id="Pathway" width="2000" height="1800"></svg>
-            <svg id="Regulation" width="900" height="1000"></svg>
-            <svg id="PPI" width="1100" height="1000"></svg>
+            <svg id="Regulation" width="900" height="1300"></svg>
+            <svg id="PPI" width="1100" height="1300"></svg>
             
         </div>
     );

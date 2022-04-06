@@ -52,7 +52,7 @@ const RegulationData = () =>
               .attr("x", 0)
               .attr("y", 0)
               .attr("width", 1400)
-              .attr("height", 1000)
+              .attr("height", 1300)
               .attr("stroke", "blue")
               .attr("fill", "blue")
 
