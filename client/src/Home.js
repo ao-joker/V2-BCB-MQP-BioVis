@@ -486,7 +486,7 @@ const Home = () =>
                         .attr("stroke-width", 1.5)
                         .attr("r", function(d){return d.radius})
                         .attr('fill', function(d){return d.color})
-                        .attr("id", function(d){return d.name})//function(d){if(d.name === proteinInterest){return "green"}else{return "black"}}) //Now specifying the different attribtues that are important for each node to be a circle visible on the svg!
+                        .attr("id", function(d){return d.actualName})//function(d){if(d.name === proteinInterest){return "green"}else{return "black"}}) //Now specifying the different attribtues that are important for each node to be a circle visible on the svg!
                   
         //Set global variable to send around 
         allNodes = setNodes(node)
@@ -553,7 +553,6 @@ const Home = () =>
                               .attr("height", 1)
                               .style("visibility", "hidden")
                         })
-
 
 
         //Now, to keep the network well updated and better looking than ever before by adding a call to linkArc (which makes the lines straigther n the viewbox) and
@@ -656,6 +655,7 @@ const Home = () =>
                                                                         var moleculeObject = 
                                                                         {
                                                                             name: element,
+                                                                            actualName: element,
                                                                             label: "#Mo" + element,
                                                                             radius: 15,
                                                                             color: "gold"
@@ -692,9 +692,10 @@ const Home = () =>
                                                                         var moleculeObject = 
                                                                         {
                                                                             name: element,
+                                                                            actualName: element,
                                                                             label: "#TF" + element,
                                                                             radius: 15,
-                                                                            color: "red"
+                                                                            color: "purple"
                                                                         }
                                                                     
                                                                         addedTF.push(element)
@@ -947,7 +948,7 @@ const Home = () =>
         .attr("fill", "black")
         .attr("stroke", "bold")
         .attr("font-size", 30)
-        //.attr("text-anchor", "middle")
+        //.style("text-anchor", "middle")
         .text("Protein-Protein Interaction Network")
     }
 

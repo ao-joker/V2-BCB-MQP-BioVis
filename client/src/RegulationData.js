@@ -40,12 +40,13 @@ const RegulationData = () =>
                             drawTables(organizedData, columnsProtein, columnsTF)
 
                             //Make adjustments to the pathway in panel A
-                            showRegulationChangesInPathway()
+                            showRegulationChangesInPathway(organizedData)
                         })
         }
 
         function makeRegulationListBackground()
         {
+            //The blue background
             d3.select("#Regulation")
               .append("rect")
               .attr("x", 0)
@@ -54,6 +55,18 @@ const RegulationData = () =>
               .attr("height", 1000)
               .attr("stroke", "blue")
               .attr("fill", "blue")
+
+            //The title
+            /*d3.select("#Regulation")
+            .append("text")
+            .attr("id", "RegulationTitle")
+            .attr("x", "50") 
+            .attr("y", "50")
+            .attr("fill", "white")
+            .attr("stroke", "bold")
+            .attr("font-size", 30)
+            //.attr("text-anchor", "middle")
+            .text("Regulation Data from" `${workingFile.filename}`)*/
         }
 
         //Generate the list of the proteins in the masterData
@@ -182,23 +195,29 @@ const RegulationData = () =>
 
         function drawTables(organizedData, columnsProtein, columnsTF)
         {
-            /*d3.select("#Regulation")
+            //Variables to draw regions for the tables
+            var width = 900
+            var height = 65 * (organizedData[0].length)
+            console.log(width)
+            console.log(height)
+            
+            d3.select("#Regulation")
                 .append("text")
-                .attr("x", 200)
-                .attr("y", 200)
+                .attr("x", 70)
+                .attr("y", 75)
                 .attr("stroke", "black")
-                .attr("fill", "green")
+                .attr("fill", "white")
                 .attr("font-size", 50)
-                .text(`${workingFile.filename}`)*/
+                .text(function(){return ("Regulation Data from " + `${workingFile.filename}`);})
 
             //Making the Protein table first
             //Define the table, and append a header row and the rest of the body
             var table = d3.select("#Regulation")
                             .append("foreignObject")
                             .attr("x", 25)
-                            .attr("y", 50)
-                            .attr("width", 900)
-                            .attr("height", 650)
+                            .attr("y", 100)
+                            .attr("width", width)
+                            .attr("height", height)
                             .append("xhtml:table")
 
             var thead = table.append("thead")
@@ -210,7 +229,7 @@ const RegulationData = () =>
                  .data(columnsProtein)
                  .enter()
                  .append("th")
-                 .text(function(d,i){console.log(d); return d;})
+                 .text(function(d,i){return d;})
 
             //Create the table body
             var rows = tbody.selectAll("tr")
@@ -227,6 +246,41 @@ const RegulationData = () =>
                             .append("td")
                             .text(function(d, i){return d.value})
 
+            //Making the Trasncription Factor table second
+            //Define the table, and append a header row and the rest of the body
+            var table = d3.select("#Regulation")
+                            .append("foreignObject")
+                            .attr("x", 25)
+                            .attr("y", 100 + height)
+                            .attr("width", width)
+                            .attr("height", height)
+                            .append("xhtml:table")
+
+            var thead = table.append("thead")
+            var tbody = table.append("tbody")
+
+            //Create the table header
+            thead.append("tr")
+                 .selectAll("th")
+                 .data(columnsTF)
+                 .enter()
+                 .append("th")
+                 .text(function(d,i){console.log(d); return d;})
+
+            //Create the table body
+            var rows = tbody.selectAll("tr")
+                            .data(organizedData[1])
+                            .enter()
+                            .append("tr")
+
+            var cells = rows.selectAll("td")
+                            .data(function(row)
+                                  {
+                                      return columnsTF.map(function(column){return {column: column, value: row[column]}})
+                                  })
+                            .enter()
+                            .append("td")
+                            .text(function(d, i){return d.value})
             
             /*table.append("thead")
                  .join("tr")
@@ -266,16 +320,114 @@ const RegulationData = () =>
                         .text(function(d){return d.value});*/
             
             //return table;
-
-            //Making the TF table second
         }
 
-        function showRegulationChangesInPathway()
+        //Change the outline of the pathway node if there is a change in expression respective to that change
+        function showRegulationChangesInPathway(organizedData)
         {
+            //Variable
+            var colorChange = ""    //Stores the stroke color post regulation
+            
+            //Go through the protein list and the transcription factor list and if the protein is in the nodes of the pathway currently shown
+            //then add an outline to note up or down regulation
+            //DISCLAIMER: USER MUST REUPLOAD IF THEY WANT A DIFFERENT LAYOUT TO BE SHOWN
+            for(var i = 0; i < organizedData[0].length; i++)
+            {
+                node.select("#" + organizedData[0][i]["Protein"])
+                    .attr("stroke", function(d, j)
+                                {  
+                                    if(d.actualName === organizedData[0][i]["Protein"])
+                                    {
+                                        //console.log(d.actualName);                    
+                                        switch(organizedData[0][i]["Regulation_Type"])
+                                        {
+                                            case "Upregulation":
+                                                //console.log("Here");
+                                                colorChange = "green"
+                                                break;
+                                                                                            
+                                                case "Downregulation":
+                                                    //console.log("Here2")
+                                                    colorChange = "red"
+                                                    break;
+
+                                                //If neutral, so Fold_Change is 0
+                                                default:
+                                                    colorChange = "gray"
+                                                    break;
+                                                                                                
+                                        }
+
+                                        return colorChange
+                                    }
+                                    else
+                                    {
+                                        return "white";
+                                    }
+                                
+                                })
+                    .attr("stroke-width", function(d, j)
+                                          {
+                                                if(d.actualName === organizedData[0][i]["Protein"])
+                                                {
+                                                    return 5.0;
+                                                }
+                                                else
+                                                {
+                                                    return 1.5;
+                                                }  
+                                          })   
+            }
+
+            for(var i = 0; i < organizedData[1].length; i++)
+            {
+                node.select("#" + organizedData[1][i]["Transcription_Factor"])
+                    .attr("stroke", function(d, j)
+                                {  
+                                    if(d.actualName === organizedData[1][i]["Transcription_Factor"])
+                                    {
+                                        //console.log(d.actualName);                    
+                                        switch(organizedData[1][i]["Regulation_Type"])
+                                        {
+                                            case "Upregulation":
+                                                //console.log("Here");
+                                                colorChange = "green"
+                                                break;
+                                                                                            
+                                                case "Downregulation":
+                                                    //console.log("Here2")
+                                                    colorChange = "red"
+                                                    break;
+
+                                                //If neutral, so Fold_Change is 0
+                                                default:
+                                                    colorChange = "gray"
+                                                    break;
+                                                                                                
+                                        }
+
+                                        return colorChange
+                                    }
+                                    else
+                                    {
+                                        return "white";
+                                    }
+                                
+                                })
+                    .attr("stroke-width", function(d, j)
+                                          {
+                                                if(d.actualName === organizedData[1][i]["Transcription_Factor"])
+                                                {
+                                                    return 5.0;
+                                                }
+                                                else
+                                                {
+                                                    return 1.5;
+                                                }  
+                                          })   
+            }
 
         }
-
-
     })
 
     return (
