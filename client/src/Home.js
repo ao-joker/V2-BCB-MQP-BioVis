@@ -1260,10 +1260,12 @@ const Home = () =>
                                 {
                                     tempArray.forEach(function(element)
                                                       {
-                                                          finalOutput = finalOutput + "-" + element   
+                                                          finalOutput = finalOutput + "\n" + element   
                                                       })
 
+                                    var output = new HtmlString.String(finalOutput)
                                     console.log(finalOutput)
+                                    console.log(output)
                                     return "Interactions: " + finalOutput
                                 }
                                 //If there are multiple (more than 1) interaction
