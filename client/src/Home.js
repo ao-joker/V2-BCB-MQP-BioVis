@@ -553,19 +553,22 @@ const Home = () =>
                         {
                             d3.select(this)
                               .select("#tooltip")
-                              .attr("width", 400)
+                              .attr("width", 450)
                               .attr("height", 50)
-                              .text("HI")
                               .style("visibility", "visible")
+                            
+                            d3.select(this).raise()
 
                             //Make the text invisible
                             d3.select(this)
                               .select("#tooltipText1")
                               .style("visibility", "visible")
+                              .raise()
 
                             d3.select(this)
                               .select("#tooltipText2")
                               .style("visibility", "visible")
+                              .raise()
                         })
                         .on("mouseout", function()
                         {
@@ -583,6 +586,8 @@ const Home = () =>
                             d3.select(this)
                               .select("#tooltipText2")
                               .style("visibility", "hidden")
+
+                              d3.select(this).lower()
                         })
 
 
@@ -1261,6 +1266,8 @@ const Home = () =>
                               .attr("height", 80)
                               .style("visibility", "visible")
 
+                            d3.select(this).raise()
+
                             //Make the text visible
                             d3.select(this)
                               .select("#tooltipText1")
@@ -1278,6 +1285,8 @@ const Home = () =>
                               .attr("width", 1)
                               .attr("height", 1)
                               .style("visibility", "hidden")
+                            
+                            d3.select(this).lower()
                             
                             //Make the text invisible
                             d3.select(this)
@@ -1418,7 +1427,7 @@ const Home = () =>
         <div className="home">
             <h2 className="text-center">The Pathway Itself!</h2>
             <select id="selectButton" position="absolute"></select>
-            <svg id="Pathway" width="2000" height="1800"></svg>
+            <svg id="Pathway" width="2200" height="1800"></svg>
             <svg id="Regulation" width="900" height="1300"></svg>
             <svg id="PPI" width="1100" height="1300"></svg>
             
