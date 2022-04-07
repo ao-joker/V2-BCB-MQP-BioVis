@@ -1274,7 +1274,8 @@ const Home = () =>
 
                                     wrap(finalOutput)
 
-                                    function wrap(text, width) {
+                                    function wrap(text, width) 
+                                    {
                                         text.each(function() {
                                           var text = d3.select(this),
                                               words = text.text().split(/\s+/).reverse(),
@@ -1285,10 +1286,13 @@ const Home = () =>
                                               y = text.attr("y"),
                                               dy = parseFloat(text.attr("dy")),
                                               tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
-                                          while (word = words.pop()) {
+                                          while (word = words.pop()) 
+                                          {
                                             line.push(word);
                                             tspan.text(line.join(" "));
-                                            if (tspan.node().getComputedTextLength() > width) {
+                                            if (tspan.node().getComputedTextLength() > width) 
+                                            
+                                            {
                                               line.pop();
                                               tspan.text(line.join(" "));
                                               line = [word];
@@ -1296,7 +1300,7 @@ const Home = () =>
                                             }
                                           }
                                         });
-                                      }
+                                    }
                                 }
                                 /*tempArray.forEach(function(element)
                                                   {
