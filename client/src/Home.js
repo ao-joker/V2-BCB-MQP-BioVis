@@ -1233,6 +1233,8 @@ const Home = () =>
                         .style("visibility", "hidden") // hide it from default at the start so it only appears on hover   
                         .text(function(d){return "Protein: " + d.name})
 
+                    //Mike Bostock already had such a nice function that I am using it here. Credits to him for his work in writing the function used 
+                    //in the ".text" portion of this node. Bl.ocks: https://bl.ocks.org/mbostock/7555321
                     node.append("text")
                         .attr("id", "tooltipText2")
                         .attr("x", 5) 
@@ -1248,13 +1250,61 @@ const Home = () =>
                                 let finalOutput = ""
                                 tempArray = d.interaction.split(" and ")
 
-                                tempArray.forEach(function(element)
+                                //If there is just one interaction
+                                if(tempArray.length === 1)
+                                {
+                                    finalOutput = tempArray[0]
+                                    return "Interaction: " + finalOutput;
+                                }
+                                else
+                                {
+                                    tempArray.forEach(function(element)
+                                                      {
+                                                          finalOutput = finalOutput + "-" + element   
+                                                      })
+
+                                    console.log(finalOutput)
+                                    return "Interactions: " + finalOutput
+                                }
+                                //If there are multiple (more than 1) interaction
+                                /*else
+                                {
+                                    //Create big text sepearted by spaces
+
+
+                                    wrap(finalOutput)
+
+                                    function wrap(text, width) {
+                                        text.each(function() {
+                                          var text = d3.select(this),
+                                              words = text.text().split(/\s+/).reverse(),
+                                              word,
+                                              line = [],
+                                              lineNumber = 0,
+                                              lineHeight = 1.1, // ems
+                                              y = text.attr("y"),
+                                              dy = parseFloat(text.attr("dy")),
+                                              tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
+                                          while (word = words.pop()) {
+                                            line.push(word);
+                                            tspan.text(line.join(" "));
+                                            if (tspan.node().getComputedTextLength() > width) {
+                                              line.pop();
+                                              tspan.text(line.join(" "));
+                                              line = [word];
+                                              tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+                                            }
+                                          }
+                                        });
+                                      }
+                                }
+                                /*tempArray.forEach(function(element)
                                                   {
                                                      finalOutput = finalOutput + "\n" + element   
                                                   })
 
-                                console.log(finalOutput)
-                                return "Interaction(s):" + finalOutput;
+                                console.log(finalOutput)*/
+                                
                             })   
         
                     node.on("mouseover", function()
