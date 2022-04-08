@@ -968,14 +968,6 @@ const Home = () =>
     function makeRegulationList(masterArray)
     {
         makeRegulationListBackground()
-        
-        //Variables and express notes
-        /*const express = require("express");
-        const fileUpload = require("express-fileupload");
-
-        app = express();
-        ap*/
-
     }
 
     /*
@@ -1262,11 +1254,10 @@ const Home = () =>
                                                       {
                                                           finalOutput = finalOutput + "\n" + element   
                                                       })
-
-                                    var output = new HtmlString.String(finalOutput)
+                                    
                                     console.log(finalOutput)
-                                    console.log(output)
-                                    return "Interactions: " + finalOutput
+                                    
+                                    return /*"Interactions: " + */ finalOutput
                                 }
                                 //If there are multiple (more than 1) interaction
                                 /*else
@@ -1312,8 +1303,8 @@ const Home = () =>
                                 console.log(finalOutput)*/
                                 
                             })   
-        
-                    node.on("mouseover", function()
+
+                    node.on("mouseover", function(d)
                         {
                             //Make the square visible
                             d3.select(this)
@@ -1486,7 +1477,7 @@ const Home = () =>
             <svg id="Pathway" width="2200" height="1800"></svg>
             <svg id="Regulation" width="900" height="1300"></svg>
             <svg id="PPI" width="1100" height="1300"></svg>
-            
+            <div id="tooltipDiv"></div>
         </div>
     );
 }
