@@ -148,7 +148,7 @@ const Home = () =>
         /*  Necessary variabels for this function and other nested functions
             with the intended use and function noted according to the <variable></variable>   */
         var selectedPathway = /*"Citrate Cycle"*/ "Glycolysis/Gluconeogensis"
-        var pathwayType = "Protein-Protein"
+        var pathwayType = "Protein Only Pathway"
         var TFPresent = false
 
         //Makes the background panel and the radio buttons
@@ -207,9 +207,9 @@ const Home = () =>
         {
 
             //Radio button creating
-            var labels= ["Protein-Protein", "Protein-Molecule-Protein"] //A set of labels for the buttons. All other layouts should be pused onto this list!
+            var labels= ["Protein Only Pathway", "Protein-Molecule-Protein"] //A set of labels for the buttons. All other layouts should be pused onto this list!
             var TFlabel = ["Toggle Transcription Factors"]
-            var layoutType = ["Protein-Protein", "Protein-Molecule-Protein"] //The layouts that are applicable. Variable to store names as strings for id attribute creation
+            var layoutType = ["Protein Only Pathway", "Protein-Molecule-Protein"] //The layouts that are applicable. Variable to store names as strings for id attribute creation
             var rbWidth = 210 //button width
             var rbHeight = 30 //button height
             var rbSpace = 30 //space between buttons
@@ -231,7 +231,7 @@ const Home = () =>
                 .attr("fill", "black")
 
             //Radio buttons
-            //Create the listed buttons to view the following: protein-protein ; protein-molecule-protein
+            //Create the listed buttons to view the following: Protein Only Pathway ; protein-molecule-protein
             //Inspiration and coding help came from this source: http://www.nikhil-nathwani.com/blog/posts/radio/radio.html
             var radioButtons = d3.select("#Pathway")
                                  .append("g")
@@ -296,7 +296,7 @@ const Home = () =>
 
             //Now, a radio button to disable and enable the transcription factors
                         //Radio buttons
-            //Create the listed buttons to view the following: protein-protein ; protein-molecule-protein
+            //Create the listed buttons to view the following: Protein Only Pathway ; protein-molecule-protein
             //Inspiration and coding help came from this source: http://www.nikhil-nathwani.com/blog/posts/radio/radio.html
             var radioButtonsTF = d3.select("#Pathway")
                                  .append("g")
@@ -442,7 +442,7 @@ const Home = () =>
         //the links and nodes attributes specific to this svg)
         const simulation = d3.forceSimulation(nodes)
               .force("link", d3.forceLink(links).id(function(d){return d.index}).distance(70))
-              .force("charge", d3.forceManyBody().strength(function(d){if(pathwayType === "Protein-Protein"){return -1700}else{return -1300}}))
+              .force("charge", d3.forceManyBody().strength(function(d){if(pathwayType === "Protein Only Pathway"){return -1700}else{return -1300}}))
               .force("center", d3.forceCenter(width / 2, (height / 2) + 100))
               .force("x", d3.forceX())
               .force("y", d3.forceY())
@@ -605,8 +605,8 @@ const Home = () =>
                 //Here is a temporary array to hold the nodes for the pathway
                 let arr = []
 
-                //Determine which layout organization to proceed with: protein-protein vs protein-molecule-protein
-                if(pathwayType === "Protein-Protein")
+                //Determine which layout organization to proceed with: Protein Only Pathway vs protein-molecule-protein
+                if(pathwayType === "Protein Only Pathway")
                 {
                     //Go through all the proteins
                     for(var i = 0; i < masterArray.length; i++)
@@ -776,7 +776,7 @@ const Home = () =>
                 let arr = []
                 //let lastIndex = 0
           
-                if(pathwayType === "Protein-Protein")
+                if(pathwayType === "Protein Only Pathway")
                 {
                     for(var i = 0; i < masterArray.length; i++)
                     {
