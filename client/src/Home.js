@@ -1,6 +1,7 @@
 import React, {useEffect} from "react";
 import * as d3 from "d3";   //npm install d3 --save!!
 import data from "./FINAL-SET.csv";
+import "./App.css";
 
 var cleanedAndOrganizedData;
 var allNodes;
@@ -1396,6 +1397,11 @@ const Home = () =>
                         .attr("stroke", "black")
                         .attr("stroke-width", 3) //Here now on the same svg we can append both the circle nodes and text to them. The positions for that are given (exact x and y taken from observable link above since it looks nice but can easily change if need be)                
         
+        //A little tooltip
+        var div = d3.select("#PPI").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0); 
+
         //A little sneaky tooltip for ya!
                     node.append("rect")
                         .attr("id", "tooltipSquare")
@@ -1498,10 +1504,22 @@ const Home = () =>
                                 
                             })   
 
-                    node.on("mouseover", function(d)
+                    //Here, d is the mouse and i is the node info
+                    node.on("mouseover", function(d, i)
                         {
+
+                            console.log(d)
+                            console.log(i)
+
+                            div.transition()
+                            .duration(100)
+                            .style("opacity", 1);
+                          div.html("Protein: " + i.name + "<br/>" + i.interaction)
+                            .style("left", (d.screenX) + "px")
+                            .style("top", (d.screenY - 28) + "px");
+
                             //Make the square visible
-                            d3.select(this)
+                            /*d3.select(this)
                               .select("#tooltipSquare")
                               .attr("width", 250)
                               .attr("height", 80)
@@ -1516,7 +1534,7 @@ const Home = () =>
 
                             d3.select(this)
                               .select("#tooltipText2")
-                              .style("visibility", "visible")
+                              .style("visibility", "visible")*/
                         })
                         .on("mouseout", function()
                         {
