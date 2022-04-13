@@ -1516,7 +1516,7 @@ const Home = () =>
                             .style("opacity", 1);
                           div.html("Protein: " + i.name + "<br/>" + i.interaction)
                             .style("left", (d.pageX) + "px")
-                            .style("top", (d.pageY - 28) + "px");
+                            .style("top", (d.pageY) + "px");
 
                             //Make the square visible
                             /*d3.select(this)
