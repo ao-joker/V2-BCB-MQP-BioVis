@@ -61,7 +61,7 @@ const Home = () =>
               pathway: commaSeparatedStringToList(data[i]["Pathway"]),
               connections: commaSeparatedStringToList(data[i]["List of Proteins Connected To"]),
               molecules: commaSeparatedStringToList(data[i]["Molecules Connected To"]),
-              pathwayConnection: data[i]["Other Pathways Connected To"],
+              pathwayConnection: commaSeparatedStringToList(data[i]["Other Pathways Connected To"]),
               TF: commaSeparatedStringToList(data[i]["List of TF Reg"]),
               regulation: commaSeparatedStringToList(data[i]["Corresponding reg"]),
               branch: data[i]["Branch point"],              
@@ -150,6 +150,7 @@ const Home = () =>
         var selectedPathway = /*"Citrate Cycle"*/ "Glycolysis/Gluconeogensis"
         var pathwayType = "Protein Only Pathway"
         var TFPresent = false
+        var pathwaysPresent = false
 
         //Makes the background panel and the radio buttons
         drawBasicBackground()
@@ -181,7 +182,7 @@ const Home = () =>
                     drawBasicBackground()
 
                     //Draw the new pathway
-                    drawPathway(masterArray, pathwayType, selectedPathway, TFPresent)
+                    drawPathway(masterArray, pathwayType, selectedPathway, TFPresent, pathwaysPresent)
                  })
                 
          //A function that inputs all the values for potentially viewed vis
@@ -209,6 +210,7 @@ const Home = () =>
             //Radio button creating
             var labels= ["Protein Only Pathway", "Protein-Molecule-Protein"] //A set of labels for the buttons. All other layouts should be pused onto this list!
             var TFlabel = ["Toggle Transcription Factors"]
+            var pathwaylabel = ["Toggle Other Pathways"]
             var layoutType = ["Protein Only Pathway", "Protein-Molecule-Protein"] //The layouts that are applicable. Variable to store names as strings for id attribute creation
             var rbWidth = 210 //button width
             var rbHeight = 30 //button height
@@ -218,6 +220,9 @@ const Home = () =>
 
             var x0TF = 500 //x offset for the TF radio button
             var y0TF = 10 //y offset for the TF radio button
+
+            var x0Pathway = 735 //x offset for the pathways radio button
+            var y0Pathway = 10 //y offset for the pathways radio button
 
             //Background for the svg
             d3.select("#Pathway")
@@ -256,7 +261,7 @@ const Home = () =>
                                                     updateRadioButtons(d3.select(this), d3.select(this.parentNode))
                                                     
                                                     //Draw the new pathway
-                                                    drawPathway(masterArray, pathwayType, selectedPathway, TFPresent)
+                                                    drawPathway(masterArray, pathwayType, selectedPathway, TFPresent, pathwaysPresent)
                                                   })
 
             //adding a rect to each button group
@@ -296,7 +301,6 @@ const Home = () =>
 
             //Now, a radio button to disable and enable the transcription factors
                         //Radio buttons
-            //Create the listed buttons to view the following: Protein Only Pathway ; protein-molecule-protein
             //Inspiration and coding help came from this source: http://www.nikhil-nathwani.com/blog/posts/radio/radio.html
             var radioButtonsTF = d3.select("#Pathway")
                                  .append("g")
@@ -328,7 +332,7 @@ const Home = () =>
                                                     //updateRadioButtons(d3.select(this), d3.select(this.parentNode))
                                                     
                                                     //Draw the new pathway
-                                                    drawPathway(masterArray, pathwayType, selectedPathway, TFPresent)
+                                                    drawPathway(masterArray, pathwayType, selectedPathway, TFPresent, pathwaysPresent)
                                                   })
 
             //adding a rect to each button group
@@ -365,6 +369,75 @@ const Home = () =>
                               .attr("fill", "white")
                               .text(function(d) {return d})
 
+            //Now, a radio button to disable and enable the other pathway connections
+                        //Radio buttons
+            //Inspiration and coding help came from this source: http://www.nikhil-nathwani.com/blog/posts/radio/radio.html
+            var radioButtonsPathway = d3.select("#Pathway")
+                                        .append("g")
+                                        .attr("id", "radioButtonPathway") 
+
+            //Create the group of rectangles and text that will compose these buttons
+            var radioButtonPathwayGroups = radioButtonsPathway.selectAll("g.button")
+                                                              .data(pathwaylabel)
+                                                              .enter()
+                                                              .append("g")
+                                                              .attr("class", "button")
+                                                              .style("cursor", "pointer")
+                                                              .on("click", function(d)
+                                                              {
+                                                                  //Update type of pathway we want to draw
+                                                                  if(pathwaysPresent === false)
+                                                                  {
+                                                                     pathwaysPresent = true
+                                                                  }
+                                                                  else
+                                                                  {
+                                                                      pathwaysPresent = false
+                                                                  }
+                                                                  console.log(pathwaysPresent) 
+                                                                
+                                                                  //Get rid of the existing pathway and redraw everything that is basically there
+                                                                  d3.select("#Pathway").selectAll("svg > *").remove()
+                                                                  drawBasicBackground()
+                                                                  //updateRadioButtons(d3.select(this), d3.select(this.parentNode))
+                                                                
+                                                                  //Draw the new pathway
+                                                                  drawPathway(masterArray, pathwayType, selectedPathway, TFPresent, pathwaysPresent)
+                                                            })
+
+            //adding a rect to each button group
+            radioButtonPathwayGroups.append("rect")
+                                    .attr("class", "buttonRect")
+                                    .attr("id", function(d, i)
+                                                {
+                                                    //console.log(layoutType[i])
+                                                    //console.log(i)
+                                                    return pathwaylabel[0];
+                                                })
+                                    .attr("width", rbWidth)
+                                    .attr("height", rbHeight)
+                                    .attr("x",function(d,i) 
+                                              {
+                                                    return x0Pathway + (rbWidth + rbSpace) * i;
+                                              })
+                                    .attr("y", y0Pathway)
+                                    .attr("rx", 5) //Give nice rounded corners
+                                    .attr("ry", 5) //Give nice rounded corners
+                                    .attr("stroke", function(d){if(pathwaysPresent === true){return "white"}else{return "black"}})
+                                    .attr("fill", function(d){if(pathwaysPresent === true){return "blue"}else{return "red"}})
+
+            //adding text to each button group, centered within the button rect
+            radioButtonPathwayGroups.append("text")
+                               .attr("class", "TFbuttonText")
+                               .attr("x",function(d, i) 
+                                    {
+                                      return x0Pathway + (rbWidth + rbSpace) * i + rbWidth / 2;
+                                    })
+                              .attr("y", y0Pathway + (rbHeight / 2))
+                              .attr("text-anchor", "middle")
+                              .attr("dominant-baseline", "central")
+                              .attr("fill", "white")
+                              .text(function(d) {return d})
 
             //A function to all the radio buttons to update color for the selected radio button 
             //and to inform which model of the pathway should be shown
@@ -406,12 +479,12 @@ const Home = () =>
         //Always start with Glycolysis
         drawPathway(masterArray, pathwayType, selectedPathway, TFPresent)
 
-        function drawPathway(masterArray, pathwayType, selectedPathway, TFPresent)
+        function drawPathway(masterArray, pathwayType, selectedPathway, TFPresent, pathwaysPresent)
         {
             //Call functions that assign links and nodes specific to the pathway selected
             //console.log(selectedPathway)
-            var nodesP = assignNodes(masterArray, pathwayType, selectedPathway, TFPresent)
-            var linksP = assignLinks(masterArray, nodesP, selectedPathway, TFPresent)
+            var nodesP = assignNodes(masterArray, pathwayType, selectedPathway, TFPresent, pathwaysPresent)
+            var linksP = assignLinks(masterArray, nodesP, selectedPathway, TFPresent, pathwaysPresent)
             console.log(nodesP)
             console.log(linksP)
 
@@ -441,9 +514,9 @@ const Home = () =>
         //This is the simulation itself that is a force directed network (tick function called later after initializing all
         //the links and nodes attributes specific to this svg)
         const simulation = d3.forceSimulation(nodes)
-              .force("link", d3.forceLink(links).id(function(d){return d.index}).distance(70))
-              .force("charge", d3.forceManyBody().strength(function(d){if(pathwayType === "Protein Only Pathway"){return -1700}else{return -1300}}))
-              .force("center", d3.forceCenter(width / 2, (height / 2) + 100))
+              .force("link", d3.forceLink(links).id(function(d){return d.index}).distance(100))
+              .force("charge", d3.forceManyBody().strength(function(d){if(pathwayType === "Protein Only Pathway"){return -2000}else{return -1500}}))
+              .force("center", d3.forceCenter(width / 2, (height / 2) + 120))
               .force("x", d3.forceX())
               .force("y", d3.forceY())
               .force('collide', d3.forceCollide().radius(function(d){return d.radius}))
@@ -474,7 +547,7 @@ const Home = () =>
                     
                     node.append("text")
                         .attr("x", 30)
-                        .attr("y", "0.31em")
+                        .attr("y", "0.34em")
                         .text(function(d){return d.actualName})
                         .clone(true).lower()
                         .attr("fill", "none")
@@ -512,7 +585,7 @@ const Home = () =>
             .attr('font-size', 12.5)
             .style("position", "absolute") // the absolute position is necessary so that we can manually define its position later
             .style("visibility", "hidden") // hide it from default at the start so it only appears on hover   
-            .text(function(d){if(d.label.includes("#Pr")){return "Gene Name: " + d.actualName;}else if(d.label.includes("#Mo")){return "Molecule Name: " + d.actualName;}else{return "Transcription Factor: " + d.actualName;}})
+            .text(function(d){if(d.label.includes("#Pr")){return "Gene Name: " + d.actualName;}else if(d.label.includes("#Mo")){return "Molecule Name: " + d.actualName;}else if(d.label.includes("#TF")){return "Transcription Factor: " + d.actualName;}else{return "Pathway: " + d.actualName;}})
                     
         node.append("text")
             .attr("id", "tooltipText2")
@@ -523,7 +596,7 @@ const Home = () =>
             .attr('font-size', 12.5)
             .style("position", "absolute") // the absolute position is necessary so that we can manually define its position later
             .style("visibility", "hidden") // hide it from default at the start so it only appears on hover   
-            .text(function(d){if(d.label.includes("#Pr")){return "Protein Name: " + d.id;}else if(d.label.includes("#Mo")){return "";}else{return "Typical Regulation Impact: " + d.regulation;}})
+            .text(function(d){if(d.label.includes("#Pr")){return "Protein Name: " + d.id;}else if(d.label.includes("#Mo")){return "";}else if(d.label.includes("#TF")){return "Typical Regulation Impact: " + d.regulation;}else{return "See " + d.actualName;}})
             
                     
                     //Draw PPI 
@@ -541,6 +614,10 @@ const Home = () =>
                         else if(d.label.includes("#TF"))
                         {
                             alert("Transcription factors do not have a PPI Network")
+                        }
+                        else if(d.label.includes("#Path"))
+                        {
+                            alert("This represents a whole pathway and does not have a PPI Network")
                         }
                         else
                         {
@@ -600,7 +677,7 @@ const Home = () =>
                               })
 
             //Create the list of nodes that fit the pathway typein question 
-            function assignNodes(masterArray, pathwayType, selectedPathway, TFPresent)
+            function assignNodes(masterArray, pathwayType, selectedPathway, TFPresent, pathwaysPresent)
             {                
                 //Here is a temporary array to hold the nodes for the pathway
                 let arr = []
@@ -625,6 +702,7 @@ const Home = () =>
                                 color: "white"
                             }
         
+                            console.log(pathwayObject)
                             arr.push(pathwayObject)
                         }
                     }
@@ -708,6 +786,41 @@ const Home = () =>
                     }
                 }
 
+                //Now add all the pathways that have connections to the proteins in this particular pathway
+                if(pathwaysPresent === true)
+                {
+                    //Temp array to hold all the pathway nodes to make
+                    var addedPathways = []
+
+                    //Go through all the pathway connections
+                    for(var i = 0; i < masterArray.length; i++)
+                    {
+                        if(masterArray[i]["pathway"].includes(selectedPathway))
+                        {
+                            //Now check all pathway connections and ensure that these objects are added once
+                            masterArray[i]["pathwayConnection"].forEach(function(element)
+                                                                        {
+                                                                            if(!(addedPathways.includes(element)) && (element !== ""))
+                                                                            {
+                                                                                console.log(element)
+                                                                                var otherPathwayObject = 
+                                                                                {
+                                                                                    name: element,
+                                                                                    actualName: element,
+                                                                                    id: element,
+                                                                                    label: "#Path" + element,
+                                                                                    radius: 30,
+                                                                                    color: "orange"
+                                                                                }
+
+                                                                                addedPathways.push(element)
+                                                                                arr.push(otherPathwayObject)
+                                                                            }
+                                                                        })
+                        }
+                    }
+                }
+                
                 //Now add the TF if present
                 if((TFPresent === true))
                 {
@@ -723,7 +836,6 @@ const Home = () =>
                             //Here is the molecule(s) entry
                             masterArray[i]["TF"].forEach(function(element)
                                                                 {
-                                                                    
                                                                     if(!(addedTF.includes(element)) && (element !== ""))
                                                                     {
                                                                         console.log(element)
@@ -761,14 +873,15 @@ const Home = () =>
                     }
                 }
 
-                //console.log(addedMolecules)
+                console.log(addedPathways)
                 console.log(addedTF)
                 addedMolecules = []
                 addedTF = []
+                addedPathways = []
                 return arr;
             }
 
-            function assignLinks(masterArray, nodesP, selectedPathway, TFPresent)
+            function assignLinks(masterArray, nodesP, selectedPathway, TFPresent, pathwaysPresent)
             {
                 //Temporary arrays
                 //  - The first will hold source and target objects of the final map 
@@ -798,13 +911,68 @@ const Home = () =>
                             {
                             masterArray[i]["connections"].forEach(function(protein)
                                                                 {
+                                                                        console.log(protein)
                                                                         var pathwayObject = 
                                                                         {
                                                                             source: nodesP.findIndex(object => {return object.name === protein}),
                                                                             target: nodesP.findIndex(object => {return object.name === masterArray[i]["name"]})
                                                                         }
 
-                                                                        arr.push(pathwayObject)
+                                                                        //If a protein shares a connection to a protein not found in this particular pathway
+                                                                        //But still has to connect to it - make it into a pathway indicator circle that is really big
+                                                                        if(pathwayObject["source"] === -1)
+                                                                        {
+                                                                            /*//Get the masterarry index
+                                                                            let index = masterArray.findIndex(object => {return object.name === protein})
+
+                                                                            //Then find the pathway it is in and make an attachment to that pathway
+                                                                            let otherPathways = masterArray[index]["pathway"]
+
+                                                                            otherPathways.forEach(function(pathway)
+                                                                                                 {
+                                                                                                    if((!(pathway === selectedPathway)) & (nodesP.findIndex(object => {return object.name === pathway}) === -1))
+                                                                                                    {
+                                                                                                        var nodesPathwayObject = 
+                                                                                                        {
+                                                                                                            name: pathway,
+                                                                                                            actualName: pathway,
+                                                                                                            id: pathway,
+                                                                                                            label: "#Path" + pathway,
+                                                                                                            radius: 30,
+                                                                                                            color: "orange"
+                                                                                                        }
+
+                                                                                                        nodesP.push(nodesPathwayObject)
+
+                                                                                                        var pathwayObject = 
+                                                                                                        {
+                                                                                                            source: nodesP.findIndex(object => {return object.name === pathway}),
+                                                                                                            target: nodesP.findIndex(object => {return object.name === masterArray[i]["name"]})
+                                                                                                        }
+
+                                                                                                        console.log(pathwayObject)
+                                                                                                        arr.push(pathwayObject)
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        var pathwayObject = 
+                                                                                                        {
+                                                                                                            source: nodesP.findIndex(object => {return object.name === pathway}),
+                                                                                                            target: nodesP.findIndex(object => {return object.name === masterArray[i]["name"]})
+                                                                                                        }
+
+                                                                                                        console.log(pathwayObject)
+                                                                                                        arr.push(pathwayObject)
+                                                                                                    }
+                                                                                                 })*/
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            console.log(pathwayObject)
+                                                                            arr.push(pathwayObject)  
+                                                                        }
+
+
                                                                 })
                             }
                             /*switch(str.length)
@@ -865,6 +1033,7 @@ const Home = () =>
                                                                         source: nodesP.findIndex(object => {return object.name === molecule}),
                                                                         target: nodesP.findIndex(object => {return object.name === masterArray[i]["name"]})
                                                                     }
+
                                                                     arr.push(pathwayObject)
                                                                 })
                             //console.log(masterArray[i] + '\n' + str)
@@ -910,6 +1079,31 @@ const Home = () =>
                                     lastIndex = 0
                     
                             }*/
+                        }
+                    }
+                }
+
+
+                //Now add the other/extra pathway links where present
+                if(pathwaysPresent === true)
+                {
+                    //Go through all the proteins
+                    for(var i = 0; i < masterArray.length; i++)
+                    {
+                        if(masterArray[i]["pathway"].includes(selectedPathway) && !(masterArray[i]["pathwayConnection"][0] === ""))
+                        {
+                            //Link the extra pathways to the appropriate protein
+                            masterArray[i]["pathwayConnection"].forEach(function(pathway)
+                                                                        {
+                                                                            var pathwayObject = 
+                                                                            {
+                                                                                source: nodesP.findIndex(object => {return object.name === pathway}),
+                                                                                target: nodesP.findIndex(object => {return object.name === masterArray[i]["name"]})    
+                                                                            }
+
+                                                                            console.log(pathwayObject)
+                                                                            arr.push(pathwayObject)
+                                                                        })
                         }
                     }
                 }
@@ -1474,7 +1668,7 @@ const Home = () =>
         <div className="home">
             <h2 className="text-center">The Pathway Itself!</h2>
             <select id="selectButton" position="absolute"></select>
-            <svg id="Pathway" width="2200" height="1800"></svg>
+            <svg id="Pathway" width="2200" height="2000"></svg>
             <svg id="Regulation" width="900" height="1300"></svg>
             <svg id="PPI" width="1100" height="1300"></svg>
             <div id="tooltipDiv"></div>
