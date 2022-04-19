@@ -1398,7 +1398,7 @@ const Home = () =>
                         .attr("stroke-width", 3) //Here now on the same svg we can append both the circle nodes and text to them. The positions for that are given (exact x and y taken from observable link above since it looks nice but can easily change if need be)                
         
         //A little tooltip
-        var div = d3.select("#PPI").append("div")
+        var div = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0); 
 
@@ -1504,8 +1504,12 @@ const Home = () =>
                                 
                             })   
 
-                    //Here, d is the mouse and i is the node info
                     node.on("mouseover", function(d, i)
+                                        {
+                                            div.style("opacity", 1)   
+                                        })
+                    //Here, d is the mouse and i is the node info
+                    node.on("mousemove", function(d, i)
                         {
 
                             console.log(d)
@@ -1513,10 +1517,10 @@ const Home = () =>
 
                             div.transition()
                             .duration(100)
-                            .style("opacity", 1);
                           div.html("Protein: " + i.name + "<br/>" + i.interaction)
-                            .style("left", (d.pageX) + "px")
-                            .style("top", (d.pageY) + "px");
+                            .style("left", (d3.pointer(d.clientX)) + "px")
+                            .style("top", (d3.pointer(d.clientY)) + "px")
+                            .raise()
 
                             //Make the square visible
                             /*d3.select(this)
@@ -1538,7 +1542,9 @@ const Home = () =>
                         })
                         .on("mouseout", function()
                         {
-                            //Make the square invisible
+                            div.style("opacity", 0)
+
+                            /*//Make the square invisible
                             d3.select(this)
                               .select("#tooltipSquare")
                               .attr("width", 1)
@@ -1554,7 +1560,7 @@ const Home = () =>
 
                             d3.select(this)
                               .select("#tooltipText2")
-                              .style("visibility", "hidden")
+                              .style("visibility", "hidden")*/
                         })
 
         //Now, to keep the network well updated and better looking than ever before by adding a call to linkArc (which makes the lines straigther n the viewbox) and
