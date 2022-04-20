@@ -1512,7 +1512,7 @@ const Home = () =>
                     node.on("mousemove", function(d, i)
                         {
 
-                            console.log(d)
+                            /*console.log(d)
                             console.log(i)
 
                             div.transition()
@@ -1520,10 +1520,10 @@ const Home = () =>
                           div.html("Protein: " + i.name + "<br/>" + i.interaction)
                             .style("left", (d3.pointer(d.clientX)) + "px")
                             .style("top", (d3.pointer(d.clientY)) + "px")
-                            .raise()
+                            .raise()*/
 
                             //Make the square visible
-                            /*d3.select(this)
+                            d3.select(this)
                               .select("#tooltipSquare")
                               .attr("width", 250)
                               .attr("height", 80)
@@ -1538,13 +1538,13 @@ const Home = () =>
 
                             d3.select(this)
                               .select("#tooltipText2")
-                              .style("visibility", "visible")*/
+                              .style("visibility", "visible")
                         })
                         .on("mouseout", function()
                         {
                             div.style("opacity", 0)
 
-                            /*//Make the square invisible
+                            //Make the square invisible
                             d3.select(this)
                               .select("#tooltipSquare")
                               .attr("width", 1)
@@ -1560,7 +1560,7 @@ const Home = () =>
 
                             d3.select(this)
                               .select("#tooltipText2")
-                              .style("visibility", "hidden")*/
+                              .style("visibility", "hidden")
                         })
 
         //Now, to keep the network well updated and better looking than ever before by adding a call to linkArc (which makes the lines straigther n the viewbox) and
