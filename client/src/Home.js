@@ -565,8 +565,16 @@ const Home = () =>
         //Set global variable to send around 
         allNodes = setNodes(node)
         
+        //A little tooltip
+        var divPath = d3.select("body")
+                    .append("div")
+                    .attr("class", "tooltip")
+                    .style("opacity", 1)
+                    .style("position", "absolute")
+                    .raise()
+
         //A little sneaky tooltip for ya!
-        node.append("rect")
+        /*node.append("rect")
             .attr("id", "tooltip")
             .attr("x", -5)
             .attr("y", -5)
@@ -597,7 +605,7 @@ const Home = () =>
             .attr('font-size', 12.5)
             .style("position", "absolute") // the absolute position is necessary so that we can manually define its position later
             .style("visibility", "hidden") // hide it from default at the start so it only appears on hover   
-            .text(function(d){if(d.label.includes("#Pr")){return "Protein Name: " + d.id;}else if(d.label.includes("#Mo")){return "";}else if(d.label.includes("#TF")){return "Typical Regulation Impact: " + d.regulation;}else{return "See " + d.actualName;}})
+            .text(function(d){if(d.label.includes("#Pr")){return "Protein Name: " + d.id;}else if(d.label.includes("#Mo")){return "";}else if(d.label.includes("#TF")){return "Typical Regulation Impact: " + d.regulation;}else{return "See " + d.actualName;}})*/
             
                     
                     //Draw PPI 
@@ -628,45 +636,29 @@ const Home = () =>
                     })
 
                     node.on("mouseover", function()
-                        {
-                            d3.select(this)
-                              .select("#tooltip")
-                              .attr("width", 450)
-                              .attr("height", 50)
-                              .style("visibility", "visible")
-                            
-                            d3.select(this).raise()
+                                         {
+                                            divPath.style("opacity", 1)  
+                                         })
 
-                            //Make the text invisible
-                            d3.select(this)
-                              .select("#tooltipText1")
-                              .style("visibility", "visible")
-                              .raise()
+                    node.on("mousemove", function(d, i)
+                                        {
+                                            //console.log(d)
+                                            console.log(i)
 
-                            d3.select(this)
-                              .select("#tooltipText2")
-                              .style("visibility", "visible")
-                              .raise()
-                        })
-                        .on("mouseout", function()
-                        {
-                            d3.select(this)
-                              .select("#tooltip")
-                              .attr("width", 1)
-                              .attr("height", 1)
-                              .style("visibility", "hidden")
+                                            divPath.transition()
+                                                   .duration(200)
+                                        
+                                            divPath.html(getTooltipOutput(i))
+                                                   .style("left", (d.clientX) + "px")
+                                                   .style("top", (d.pageY) + "px")
+                                                   .style("height", ((determineTooltipHeight(i)) + "px"))
+                                                   .raise()
+                                        })
 
-                            //Make the text invisible
-                            d3.select(this)
-                              .select("#tooltipText1")
-                              .style("visibility", "hidden")
-
-                            d3.select(this)
-                              .select("#tooltipText2")
-                              .style("visibility", "hidden")
-
-                              d3.select(this).lower()
-                        })
+                    node.on("mouseout", function()
+                                        {
+                                            divPath.style("opacity", 0)
+                                        })
 
 
         //Now, to keep the network well updated and better looking than ever before by adding a call to linkArc (which makes the lines straigther n the viewbox) and
@@ -676,6 +668,50 @@ const Home = () =>
                                   link.attr("d", function(d){return (`M${d.source.x},${d.source.y}A0,0 0 0,1 ${d.target.x},${d.target.y}`)})
                                   node.attr("transform", function(d){return (`translate(${d.x},${d.y})`)})
                               })
+
+        //Get the tooltip output for each particular node
+        function getTooltipOutput(i)
+        {
+            //console.log(i)
+            if(i.label.includes("#Pr"))
+            {
+                return "Gene Name: " + i.actualName + "<br/>" + "<br/>" + "Protein Name: " + i.id;
+            }
+            else if(i.label.includes("#Mo"))
+            {
+                return "Molecule Name: " + i.actualName;
+            }
+            else if(i.label.includes("#TF"))
+            {
+                return "Transcription Factor: " + i.actualName + "<br/>" + "<br/>" + "Regulation Effect: " + i.regulation;
+            }
+            else
+            {
+                return "Pathway: " + i.actualName;
+            }
+        }
+
+        //The tooltip height for each node
+        function determineTooltipHeight(i)
+        {
+            //console.log(i)
+            if(i.label.includes("#Pr"))
+            {
+                return 75;
+            }
+            else if(i.label.includes("#Mo"))
+            {
+                return 30;
+            }
+            else if(i.label.includes("#TF"))
+            {
+                return 65;
+            }
+            else
+            {
+                return 30;
+            }
+        }
 
             //Create the list of nodes that fit the pathway typein question 
             function assignNodes(masterArray, pathwayType, selectedPathway, TFPresent, pathwaysPresent)
@@ -1403,11 +1439,10 @@ const Home = () =>
                         .attr("class", "tooltip")
                         .style("opacity", 1)
                         .style("position", "absolute")
-                        .html("Testing")
                         .raise()
 
         //A little sneaky tooltip for ya!
-                    node.append("rect")
+                    /*node.append("rect")
                         .attr("id", "tooltipSquare")
                         .attr("x", -5)
                         .attr("y", -5)
@@ -1461,112 +1496,35 @@ const Home = () =>
                                     
                                     console.log(finalOutput)
                                     
-                                    return /*"Interactions: " + */ finalOutput
+                                    return /*"Interactions: " +  finalOutput
                                 }
-                                //If there are multiple (more than 1) interaction
-                                /*else
-                                {
-                                    //Create big text sepearted by spaces
-
-
-                                    wrap(finalOutput)
-
-                                    function wrap(text, width) 
-                                    {
-                                        text.each(function() {
-                                          var text = d3.select(this),
-                                              words = text.text().split(/\s+/).reverse(),
-                                              word,
-                                              line = [],
-                                              lineNumber = 0,
-                                              lineHeight = 1.1, // ems
-                                              y = text.attr("y"),
-                                              dy = parseFloat(text.attr("dy")),
-                                              tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
-                                          while (word = words.pop()) 
-                                          {
-                                            line.push(word);
-                                            tspan.text(line.join(" "));
-                                            if (tspan.node().getComputedTextLength() > width) 
-                                            
-                                            {
-                                              line.pop();
-                                              tspan.text(line.join(" "));
-                                              line = [word];
-                                              tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
-                                            }
-                                          }
-                                        });
-                                    }
-                                }
-                                /*tempArray.forEach(function(element)
-                                                  {
-                                                     finalOutput = finalOutput + "\n" + element   
-                                                  })
-
-                                console.log(finalOutput)*/
-                                
-                            })   
+                            })*/  
 
                     node.on("mouseover", function(d, i)
                                         {
                                             div.style("opacity", 1)   
                                         })
+
                     //Here, d is the mouse and i is the node info
                     node.on("mousemove", function(d, i)
-                        {
+                                        {
+                                            //console.log(d)
+                                            //console.log(i)
 
-                            console.log(d)
-                            console.log(i)
+                                            div.transition()
+                                               .duration(200)
+                                        
+                                            div.html("Protein: " + i.name + "<br/>" + "<br/>" + organizeInteractions(i.interaction))
+                                               .style("left", (d.clientX) + "px")
+                                               .style("top", (d.pageY) + "px")
+                                               .style("height", ((determineTooltipHeight(i.interaction)) + "px"))
+                                               .raise()
+                                        })
 
-                            div.transition()
-                            .duration(100)
-                          div.html("Protein: " + i.name + "<br/>" + i.interaction)
-                            .style("left", (d.clientX) + "px")
-                            .style("top", (d.pageY) + "px")
-                            //.style("width", (d3.pointer(d.clientY)) + "px")
-                            .raise()
-
-                            /*//Make the square visible
-                            d3.select(this)
-                              .select("#tooltipSquare")
-                              .attr("width", 250)
-                              .attr("height", 80)
-                              .style("visibility", "visible")
-
-                            d3.select(this).raise()
-
-                            //Make the text visible
-                            d3.select(this)
-                              .select("#tooltipText1")
-                              .style("visibility", "visible")
-
-                            d3.select(this)
-                              .select("#tooltipText2")
-                              .style("visibility", "visible")*/
-                        })
-                        .on("mouseout", function()
-                        {
-                            div.style("opacity", 0)
-
-                            /*//Make the square invisible
-                            d3.select(this)
-                              .select("#tooltipSquare")
-                              .attr("width", 1)
-                              .attr("height", 1)
-                              .style("visibility", "hidden")
-                            
-                            d3.select(this).lower()
-                            
-                            //Make the text invisible
-                            d3.select(this)
-                              .select("#tooltipText1")
-                              .style("visibility", "hidden")
-
-                            d3.select(this)
-                              .select("#tooltipText2")
-                              .style("visibility", "hidden")*/
-                        })
+                    node.on("mouseout", function()
+                                        {
+                                            div.style("opacity", 0)
+                                        })
 
         //Now, to keep the network well updated and better looking than ever before by adding a call to linkArc (which makes the lines straigther n the viewbox) and
         //a call to a transfrom attribute of the nodes that will properly display the text alongside and with the circle nodes as it moves
@@ -1576,6 +1534,56 @@ const Home = () =>
                                   node.attr("transform", function(d){return (`translate(${d.x},${d.y})`)})
                               })
     
+        //Process the interactions if in a denoted way
+        function organizeInteractions(proteinInteractions)
+        {
+            let tempArray = []
+            let finalOutput = ""
+            //console.log(proteinInteractions)
+            tempArray = proteinInteractions.split(" and ")
+
+            //console.log(tempArray)
+            //If there is just one interaction
+            if(tempArray.length === 1)
+            {
+                finalOutput = tempArray[0]
+                return "Interaction: " + "<br/>" + finalOutput;
+            }
+            //Multiple interactions
+            else
+            {
+                tempArray.forEach(function(element)
+                                  {
+                                      finalOutput = finalOutput + "<br/>" + "-" + element   
+                                  })
+                
+                console.log(finalOutput)
+                
+                return "Interactions: " +  finalOutput
+            }
+
+        }
+
+        //Denote the tooltip height 
+        function determineTooltipHeight(proteinInteractions)
+        {
+            let tempArray = []
+            //console.log(proteinInteractions)
+            tempArray = proteinInteractions.split(" and ")
+
+            //console.log(tempArray)
+            //Return the number of elements for the tooltip
+            if(tempArray.length === 1)
+            {
+                return 65;
+            }
+            else
+            {
+                return ((tempArray.length * 20) + 25);
+            }
+
+
+        }
         //As mentioned above in the tick addition, this function straightens the lines and makes them look better too!
         //linkArc = d =>`M${d.source.x},${d.source.y}A0,0 0 0,1 ${d.target.x},${d.target.y}`
         
@@ -1587,8 +1595,6 @@ const Home = () =>
                         .force("center", d3.forceCenter(width / 2, height / 2))     //Determines center of the system
                         .force("link", d3.forceLink().links(updatedLinks).distance(100))
                         .force("collision", d3.forceCollide().radius(function(d){return d.radius}))
-
-
 
         simulation.on("tick", ticked)    //Draws the objects
 
@@ -1697,7 +1703,9 @@ const Home = () =>
         <div className="home">
             <h2 className="text-center">The Pathway Itself!</h2>
             <select id="selectButton" position="absolute"></select>
-            <svg id="Pathway" width="2200" height="2000"></svg>
+            <div id="PathwayContainer" width="2200" height="2000">
+                <svg id="Pathway" width="2200" height="2000"></svg>
+            </div>
             <div id="PPIContainer" width="1100" height="1300">
                 <svg id="Regulation" width="900" height="1300"></svg>
                 <svg id="PPI" width="1100" height="1300"></svg>

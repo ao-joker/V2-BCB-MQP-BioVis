@@ -31,12 +31,14 @@
 .tooltip {
   position: absolute;
   text-align: center;
-  width: 120px;
-  height: 200px;
+  width: 180px;
+  height: 60px;
   padding: 2px;
   font: 12px sans-serif;
-  background: rgb(131, 164, 208);
+  background: rgb(248, 249, 250);
   border: 2px;
+  border-width: 10px;
+  border-color: black;
   border-radius: 8px;
   pointer-events: none;
 }
