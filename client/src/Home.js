@@ -1398,9 +1398,13 @@ const Home = () =>
                         .attr("stroke-width", 3) //Here now on the same svg we can append both the circle nodes and text to them. The positions for that are given (exact x and y taken from observable link above since it looks nice but can easily change if need be)                
         
         //A little tooltip
-        var div = d3.select("body").append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0); 
+            var div = d3.select("body")
+                        .append("div")
+                        .attr("class", "tooltip")
+                        .style("opacity", 1)
+                        .style("position", "absolute")
+                        .html("Testing")
+                        .raise()
 
         //A little sneaky tooltip for ya!
                     node.append("rect")
@@ -1518,8 +1522,9 @@ const Home = () =>
                             div.transition()
                             .duration(100)
                           div.html("Protein: " + i.name + "<br/>" + i.interaction)
-                            .style("left", (d3.pointer(d.clientX)) + "px")
-                            .style("top", (d3.pointer(d.clientY)) + "px")
+                            .style("left", (d.clientX) + "px")
+                            .style("top", (d.pageY) + "px")
+                            //.style("width", (d3.pointer(d.clientY)) + "px")
                             .raise()
 
                             /*//Make the square visible
@@ -1693,9 +1698,12 @@ const Home = () =>
             <h2 className="text-center">The Pathway Itself!</h2>
             <select id="selectButton" position="absolute"></select>
             <svg id="Pathway" width="2200" height="2000"></svg>
-            <svg id="Regulation" width="900" height="1300"></svg>
-            <svg id="PPI" width="1100" height="1300"></svg>
-            <div id="tooltipDiv"></div>
+            <div id="PPIContainer" width="1100" height="1300">
+                <svg id="Regulation" width="900" height="1300"></svg>
+                <svg id="PPI" width="1100" height="1300"></svg>
+            </div>
+            
+
         </div>
     );
 }
