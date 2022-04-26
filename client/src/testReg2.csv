@@ -1,6 +1,6 @@
-Name,Fold Change
-Rv0081,4.3
-Rv1776,0.8
-Rv0767c,3.1
-Rv1098c,-6.2
-Rv1248c,-0.3
+Name,Fold Change,p-value
+Rv0081,4.3,0.02
+Rv1776,0.8,0.01
+Rv0767c,3.1,0.001
+Rv1098c,-6.2,0.5
+Rv1248c,-0.3,0.23

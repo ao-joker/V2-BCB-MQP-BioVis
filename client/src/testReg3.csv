@@ -1,5 +1,5 @@
-Name,Fold Change
-Rv1436,-1.5
-Rv2702,-0.4
-Rv0767c,1.2
-Rv1023,2
+Name,Fold Change,p-value
+Rv1436,-1.5,0.03
+Rv2702,-0.4,0.4
+Rv0767c,1.2,0.2
+Rv1023,2,0.1
