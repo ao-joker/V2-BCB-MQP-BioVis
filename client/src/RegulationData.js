@@ -29,8 +29,8 @@ const RegulationData = () =>
                             //console.log(masterData)
                             //Variable that defines the columns of the csv, that being simply the protein name ("Rv####") and fold change
                             //Then, other details will be pulled from the existing masterArray dataset
-                            var columnsProtein = ["Protein", "Pathway", "Branch_Point", "Regulation_Type", "Fold_Change"]
-                            var columnsTF = ["Transcription_Factor", "Pathway", "Branch_Point", "Regulation_Type", "Fold_Change"]
+                            var columnsProtein = ["Protein", "Pathway", "Branch_Point", "Regulation_Type", "Fold_Change", "P_value"]
+                            var columnsTF = ["Transcription_Factor", "Pathway", "Branch_Point", "Regulation_Type", "Fold_Change", "P_value"]
 
                             //Organize the data to match the columns
                             var organizedData = organizeDataForRegList(data, masterData, proteinList, TFList)
@@ -54,7 +54,8 @@ const RegulationData = () =>
               .attr("width", 1400)
               .attr("height", 1300)
               .attr("stroke", "blue")
-              .attr("fill", "blue")
+              .attr("stroke-width", 5)
+              .attr("fill", "white")
 
             //The title
             /*d3.select("#Regulation")
@@ -148,7 +149,8 @@ const RegulationData = () =>
                         Pathway: masterData[indexNumber1]["pathway"],
                         Branch_Point: masterData[indexNumber1]["branch"],
                         Regulation_Type: getRegulationType(data[j]["Fold Change"]),
-                        Fold_Change: data[j]["Fold Change"]
+                        Fold_Change: data[j]["Fold Change"],
+                        P_value: data[j]["p-value"]
                     }
 
                     arrProtein.push(listObject)
@@ -166,7 +168,8 @@ const RegulationData = () =>
                         Pathway: "N/A",
                         Branch_Point: "N/A",
                         Regulation_Type: getRegulationType(data[j]["Fold Change"]),
-                        Fold_Change: data[j]["Fold Change"]
+                        Fold_Change: data[j]["Fold Change"],
+                        P_value: data[j]["p-value"]
                     }
 
                     arrTF.push(listObject)

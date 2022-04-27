@@ -233,8 +233,8 @@ const Home = () =>
                 .attr("width", 4000)
                 .attr("height", 2000)
                 .attr("stroke", "black")
-                .attr("stroke-width", 2)
-                .attr("fill", "black")
+                .attr("stroke-width", 5)
+                .attr("fill", "white")
 
             //Radio buttons
             //Create the listed buttons to view the following: Protein Only Pathway ; protein-molecule-protein
@@ -534,7 +534,7 @@ const Home = () =>
                         .selectAll("path")
                         .data(links)
                         .join("path")
-                        .attr("stroke", "white")//function(d){if(d.interaction === undefined || d.interaction.indexOf("and") !== -1){d.interaction = "Multiple (hover over proteins)"; return colorLegend(d.interaction)}else{return colorLegend(d.interaction)}}) //Now, we select all paths as before but link it to the updatedLinks data stored in links - all black stroke lines
+                        .attr("stroke", "black")//function(d){if(d.interaction === undefined || d.interaction.indexOf("and") !== -1){d.interaction = "Multiple (hover over proteins)"; return colorLegend(d.interaction)}else{return colorLegend(d.interaction)}}) //Now, we select all paths as before but link it to the updatedLinks data stored in links - all black stroke lines
 
         //Updated and specify the various attributes associated with each node that is a subset of the whole nodes class
         //Here I am just defining the basic attibutes for the nodes similarly to how it was done in the links above 
@@ -556,7 +556,7 @@ const Home = () =>
                         .attr("stroke-width", 3) //Here now on the same svg we can append both the circle nodes and text to them. The positions for that are given (exact x and y taken from observable link above since it looks nice but can easily change if need be)                
                  
                     node.append("circle")
-                        .attr("stroke", "white")//(d){if(d.name === proteinInterest){return "white"}else{if(d.interaction === undefined || d.interaction.indexOf("and") !== -1){d.interaction = "Multiple (hover over proteins)"; return colorLegend(d.interaction)}else{return colorLegend(d.interaction)}}})
+                        .attr("stroke", "black")//(d){if(d.name === proteinInterest){return "white"}else{if(d.interaction === undefined || d.interaction.indexOf("and") !== -1){d.interaction = "Multiple (hover over proteins)"; return colorLegend(d.interaction)}else{return colorLegend(d.interaction)}}})
                         .attr("stroke-width", 1.5)
                         .attr("r", function(d){return d.radius})
                         .attr('fill', function(d){return d.color})
@@ -736,7 +736,7 @@ const Home = () =>
                                 id: masterArray[i]["id"],
                                 label: "#Pr" + masterArray[i]["name"],
                                 radius: 20,
-                                color: "white"
+                                color: "black"
                             }
         
                             console.log(pathwayObject)
@@ -793,7 +793,7 @@ const Home = () =>
                                 id: masterArray[i]["id"],
                                 label: "#Pr" + masterArray[i]["name"],
                                 radius: 20,
-                                color: "white"
+                                color: "black"
                             }
         
                             arr.push(pathwayObject)
@@ -1191,7 +1191,8 @@ const Home = () =>
           .attr("width", 1400)
           .attr("height", 1300)
           .attr("stroke", "blue")
-          .attr("fill", "blue")
+          .attr("stroke-width", 5)
+          .attr("fill", "white")
   
     }
 
@@ -1214,7 +1215,8 @@ const Home = () =>
           .attr("width", 1600)
           .attr("height", 1300)
           .attr("stroke", "pink")
-          .attr("fill", "pink")
+          .attr("stroke-width", 5)
+          .attr("fill", "white")
 
         //Here is a makeshift title that will be replaced eventually as the PPI keeps getting updated
         d3.select("#PPI")
@@ -1579,124 +1581,11 @@ const Home = () =>
             }
             else
             {
-                return ((tempArray.length * 20) + 25);
+                return ((tempArray.length * 20) + 30);
             }
 
 
         }
-        //As mentioned above in the tick addition, this function straightens the lines and makes them look better too!
-        //linkArc = d =>`M${d.source.x},${d.source.y}A0,0 0 0,1 ${d.target.x},${d.target.y}`
-        
-        /*const nodes = updatedNodes;
-
-        var u;
-        var simulation = d3.forceSimulation(nodes)
-                        .force("charge", d3.forceManyBody().strength(-400))       //Strength of the attraction/repel
-                        .force("center", d3.forceCenter(width / 2, height / 2))     //Determines center of the system
-                        .force("link", d3.forceLink().links(updatedLinks).distance(100))
-                        .force("collision", d3.forceCollide().radius(function(d){return d.radius}))
-
-        simulation.on("tick", ticked)    //Draws the objects
-
-        function ticked()
-        {
-            /*var u = d3.select("#PPI")
-                    .selectAll("circle")
-                    .data(nodes)
-                    .join("circle")
-                    .attr("r", function(d) {return d.radius})
-                    .attr("cx", function(d) {return d.x})
-                    .attr("cy", function(d) {console.log(d); return d.y})
-                    .attr("fill", "green")
-                    .attr("stroke", "black")
-
-                u = d3.select("#PPI")
-                    //.select(".links")
-                    .selectAll("line")
-                    .data(updatedLinks)
-                    .join("line")
-                    .attr("x1", function(d){return d.source.x})
-                    .attr("y1", function(d){return d.source.y})
-                    .attr("x2", function(d){return d.target.x})
-                    .attr("y2", function(d){return d.target.y})
-                    .attr("stroke", "black")
-
-                u = d3.select("#PPI")
-                    //.append("g")
-                    //.select(".nodes")
-                    .selectAll("circle")
-                    .data(updatedNodes)
-                    .join("circle")
-                    .attr("cx", function(d){return d.x})
-                    .attr("cy", function(d){return d.y})
-                    .attr("r", function(d){return d.radius})
-                    /*.text(function(d) {return d.name})
-                    .attr("x", function(d){return d.x})
-                    .attr("y", function(d){return d.y})
-                    .attr("dy", function(d){return 10})
-                    .attr("font-weight", 30)
-                    .style("font-size", "15px")
-                    .style("fill", function(d){ if(d.name === proteinInterest){return "green"}else{return "black"}})
-                    .attr("id", function(d){return d.name})
-
-
-            //updateLinks()
-            //updateNodes()
-        }
-
-        function updateNodes()
-        {
-            u = d3.select("#PPI")
-                //.append("g")
-                //.select(".nodes")
-                .selectAll("circle")
-                .data(updatedNodes)
-                .join("circle")
-                .attr("cx", function(d){return d.x})
-                .attr("cy", function(d){return d.y})
-                .attr("r", function(d){return d.radius})
-                /*.text(function(d) {return d.name})
-                .attr("x", function(d){return d.x})
-                .attr("y", function(d){return d.y})
-                .attr("dy", function(d){return 10})
-                .attr("font-weight", 30)
-                .style("font-size", "15px")
-                .style("fill", function(d){ if(d.name === proteinInterest){return "green"}else{return "black"}})
-                .attr("id", function(d){return d.name})
-
-              u = d3.select("#PPI")
-                    //.select(".nodes")
-                    .selectAll("text")
-                    .data(updatedNodes)
-                    .join("text")
-                    .text(function(d) {return d.name})
-                    .attr("x", function(d){return d.x})
-                    .attr("y", function(d){return d.y})
-                    .attr("dy", function(d){return 5})
-                    .attr("id", function(d){return d.name})
-                    .attr("fill", function(d){ if(d.name === proteinInterest){return "green"}else{return "black"}})
-                    .style("font-size", "30px")
-                    .attr("r", function(d) {return d.radius})
-                    .attr("cx", function(d) {return d.x})
-                    .attr("cy", function(d) {console.log(d); return d.y})
-                    .attr("fill", "green")
-                    .attr("stroke", "black")
-
-        }
-
-        function updateLinks()
-        {
-            u = d3.select("#PPI")
-                    //.select(".links")
-                    .selectAll("line")
-                    .data(updatedLinks)
-                    .join("line")
-                    .attr("x1", function(d){return d.source.x})
-                    .attr("y1", function(d){return d.source.y})
-                    .attr("x2", function(d){return d.target.x})
-                    .attr("y2", function(d){return d.target.y})
-                    .attr("stroke", "black")
-        }*/
     }
 
     return(
