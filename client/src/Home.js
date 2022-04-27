@@ -1590,7 +1590,6 @@ const Home = () =>
 
     return(
         <div className="home">
-            <h2 className="text-center">The Pathway Itself!</h2>
             <select id="selectButton" position="absolute"></select>
             <div id="PathwayContainer" width="2200" height="2000">
                 <svg id="Pathway" width="2200" height="2000"></svg>
