@@ -6,4 +6,4 @@ Metabolic pathways are complex, multi-structured organizations of proteins and m
 Full Report at Digital WPI Database!
 
 
-Link to full report: *Will update when active*
+Link to full report: https://digital.wpi.edu/pdfviewer/cz30pw89v
